@@ -1,0 +1,823 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <title>Presidential Opinion Poll System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+<style>
+    :root {
+        /* IEBC-inspired palette; digital approximation, not a
+           verified Pantone 375 U colour conversion */
+        --green: #80D52B;
+        --green-light: #F4FAEC;
+        --green-pale: #F8FBF5;
+        --green-dark: #28552B;
+        --green-deep: #183C24;
+        --white: #FFFFFF;
+        --text: #303A32;
+        --border: #DCE7D7;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        background: var(--green-pale);
+        color: var(--text);
+        line-height: 1.5;
+    }
+
+    header {
+        background: var(--green-deep);
+        color: var(--white);
+        padding: 15px 20px;
+        border-bottom: 2px solid var(--green);
+    }
+
+    header h1 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: 0.15px;
+    }
+
+    nav {
+        background: var(--green);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 9px 20px;
+        border-bottom: 1px solid #6DBB24;
+    }
+
+    nav a {
+        color: #19371C;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 6px 10px;
+        border-radius: 3px;
+        transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    nav a:hover {
+        background: var(--white);
+        color: var(--green-deep);
+    }
+
+    main {
+        padding: 20px;
+    }
+
+    section {
+        background: var(--white);
+        padding: 20px;
+        margin-bottom: 18px;
+        border: 1px solid var(--border);
+        border-top: 2px solid var(--green);
+        border-radius: 4px;
+        box-shadow: 0 1px 4px rgba(24, 60, 36, 0.04);
+        transition: border-color 0.2s ease,
+                    box-shadow 0.2s ease;
+    }
+
+    section:hover {
+        border-color: #A9D77F;
+        box-shadow: 0 3px 12px rgba(68, 130, 42, 0.10);
+    }
+
+    h2 {
+        margin-top: 0;
+        color: var(--green-dark);
+        font-size: 19px;
+        font-weight: 600;
+    }
+
+    label {
+        display: block;
+        margin-top: 10px;
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--green-dark);
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+        width: 100%;
+        padding: 9px 10px;
+        margin-top: 5px;
+        border-radius: 3px;
+        border: 1px solid #CCD8C7;
+        font-family: inherit;
+        font-size: 14px;
+    }
+
+    input,
+    select,
+    textarea {
+        background: var(--white);
+        color: var(--text);
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        outline: 2px solid rgba(128, 213, 43, 0.28);
+        border-color: #68AF29;
+    }
+
+    button {
+        background: var(--green);
+        color: #19371C;
+        border: 1px solid #70BD29;
+        margin-top: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s ease,
+                    box-shadow 0.2s ease;
+    }
+
+    button:hover {
+        background: #91E13F;
+        box-shadow: 0 2px 9px rgba(80, 145, 43, 0.16);
+    }
+
+    button:focus-visible,
+    nav a:focus-visible {
+        outline: 2px solid var(--green-dark);
+        outline-offset: 2px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        background: var(--white);
+    }
+
+    table th,
+    table td {
+        border: 1px solid var(--border);
+        padding: 9px 10px;
+        text-align: left;
+    }
+
+    table th {
+        background: #EAF5DF;
+        color: var(--green-dark);
+        font-weight: 600;
+    }
+
+    table tbody tr:nth-child(even) {
+        background: #FAFCF8;
+    }
+
+    table tbody tr:hover {
+        background: #F0F8E8;
+    }
+
+    footer {
+        background: var(--green-deep);
+        color: var(--white);
+        text-align: center;
+        padding: 12px;
+        font-size: 13px;
+        border-top: 2px solid var(--green);
+    }
+
+    @media (max-width: 600px) {
+        main {
+            padding: 12px;
+        }
+
+        section {
+            padding: 15px;
+        }
+
+        nav {
+            gap: 4px;
+            padding: 8px 12px;
+        }
+
+        nav a {
+            font-size: 13px;
+            padding: 6px 8px;
+        }
+
+        table {
+            display: block;
+            overflow-x: auto;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            transition: none !important;
+        }
+    }
+</style>
+
+</head>
+<body>
+<div class="header">
+    
+    <img class="logo" src="https://www.iebc.or.ke/images/iebclogo1.png">
+</div>
+<div class="dashboard">
+<h2>Reservation Form</h2>
+
+<div class="field">
+<label>Transaction ID</label>
+<input id="txtTransID" readonly="">
+</div>
+
+<div class="field">
+<label>Voter Name</label>
+<input id="txtGuestName" readonly="">
+<button onclick="searchGuest()">...</button>
+</div>
+
+<div class="field">
+<label>Pooling Station</label>
+<input id="txtRoomNumber" readonly="">
+<button onclick="searchRoom()">...</button>
+</div>
+
+<div class="field">
+<label>County of Origin</label>
+<input id="txtRoomType" readonly="">
+</div>
+
+<div class="field">
+<label>Population Count</label>
+<input id="txtRoomRate" readonly="">
+</div>
+
+<div class="field">
+<label>Day of Registration In</label>
+<input type="date" id="dtCheckInDate" onchange="calcDays()">
+</div>
+
+<div class="field">
+<label>Day to ❎ Vote</label>
+<input type="date" id="dtCheckOutDate" onchange="calcDays()">
+</div>
+
+<div class="field">
+<label>Days</label>
+<input id="txtDaysNumber" readonly="">
+</div>
+
+<div class="field">
+<label>Candidate of Choice</label>
+<input id="txtDiscount" readonly="">
+</div>
+
+<div class="field">
+<label>Subtotal</label>
+<input id="txtSubTotal" readonly="">
+</div>
+
+<div class="field">
+<label>Advance</label>
+<input id="txtAdvance" oninput="calculateTotal()">
+</div>
+
+<div class="field">
+<label>Total</label>
+<input id="txtTotal" readonly="">
+</div>
+
+<div class="actions">
+<button class="save" onclick="reserve()">Register</button>
+<button class="cancel" onclick="cancelReserve()">Cancel</button>
+</div>
+</div>
+
+<footer>
+    © 2026 Presidential Opinion Poll System | For Research and Academic Use
+</footer>
+
+<script>
+"use strict";
+const API_URL = "https://script.google.com/macros/s/AKfycbx7ZtogE6YPh27eNqKixsBPzxOj7bh1RqSA5VJSaHXOBBYZbZnpwoGEJt3sFoh1DjG-/exec";
+
+const QUEUE_KEY = "hotelReservationQueueV1";
+const LEGACY_KEY = "reservation";
+const DEVICE_KEY = "hotelDeviceIdV1";
+
+const $ = id => document.getElementById(id);
+
+function readJSON(key, fallback = null) {
+    try {
+        const value = localStorage.getItem(key);
+        return value ? JSON.parse(value) : fallback;
+    } catch (error) {
+        console.error("Could not read storage:", key, error);
+        return fallback;
+    }
+}
+
+function writeJSON(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+}
+
+function getDeviceId() {
+    let id = localStorage.getItem(DEVICE_KEY);
+
+    if (!id) {
+        id = makeId("DEVICE");
+        localStorage.setItem(DEVICE_KEY, id);
+    }
+
+    return id;
+}
+
+function makeId(prefix = "RES") {
+    const unique = window.crypto &&
+        typeof window.crypto.randomUUID === "function"
+        ? window.crypto.randomUUID()
+        : Date.now().toString(36) + "-" +
+          Math.random().toString(36).slice(2) +
+          "-" + Math.random().toString(36).slice(2);
+
+    return prefix + "-" + unique.toUpperCase();
+}
+
+function getSelectedRoom() {
+    return readJSON("selectedRoom");
+}
+
+function getSelectedGuest() {
+    return readJSON("currentGuest");
+}
+
+function getSelectedDiscount() {
+    return readJSON("selectedDiscount");
+}
+
+function getQueue() {
+    const queue = readJSON(QUEUE_KEY, {});
+    return queue && typeof queue === "object" && !Array.isArray(queue)
+        ? queue
+        : {};
+}
+
+function saveQueue(queue) {
+    writeJSON(QUEUE_KEY, queue);
+}
+
+function updateReservationStatus(id, status, message = "") {
+    const queue = getQueue();
+
+    if (!queue[id]) return;
+
+    queue[id].syncStatus = status;
+    queue[id].syncMessage = message;
+    queue[id].updatedAt = new Date().toISOString();
+
+    saveQueue(queue);
+}
+
+/* ==========================================
+   PAGE INITIALISATION
+========================================== */
+
+function init() {
+    const room = getSelectedRoom();
+    const guest = getSelectedGuest();
+    const discount = getSelectedDiscount();
+
+    if ($("txtTransID") && !$("txtTransID").value) {
+        $("txtTransID").value = makeId("TRANS");
+    }
+
+    if (room) {
+        if ($("txtRoomNumber")) $("txtRoomNumber").value = room.number || "";
+        if ($("txtRoomType")) $("txtRoomType").value = room.type || "";
+        if ($("txtRoomRate")) $("txtRoomRate").value = room.rate ?? "";
+    }
+
+    if (guest && $("txtGuestName")) {
+        $("txtGuestName").value =
+            [guest.first, guest.last].filter(Boolean).join(" ");
+    }
+
+    if (discount && $("txtDiscount")) {
+        $("txtDiscount").value =
+            (discount.type || "Discount") +
+            " (" + ((Number(discount.rate) || 0) * 100) + "%)";
+    }
+
+    const checkIn = $("dtCheckInDate");
+    const checkOut = $("dtCheckOutDate");
+
+    if (checkIn) checkIn.addEventListener("change", calcDays);
+    if (checkOut) checkOut.addEventListener("change", calcDays);
+
+    if ($("txtRoomRate")) {
+        $("txtRoomRate").addEventListener("input", calculateTotal);
+    }
+
+    if ($("txtAdvance")) {
+        $("txtAdvance").addEventListener("input", calculateTotal);
+    }
+
+    if (navigator.onLine) {
+        syncPendingReservations();
+    }
+}
+
+/* ==========================================
+   GUEST AND ROOM LOOKUPS
+========================================== */
+
+function searchGuest() {
+    if (!getSelectedGuest()) {
+        alert("No guest found. Please select a guest first.");
+        return;
+    }
+
+    alert("Guest loaded from guest.html.");
+}
+
+function searchRoom() {
+    if (!getSelectedRoom()) {
+        alert("No room selected. Please select a room first.");
+        return;
+    }
+
+    alert("Room loaded from room.html.");
+}
+
+/* ==========================================
+   DATES AND TOTALS
+========================================== */
+
+function calcDays() {
+    const inValue = $("dtCheckInDate")?.value;
+    const outValue = $("dtCheckOutDate")?.value;
+
+    if (!inValue || !outValue) return;
+
+    const start = new Date(inValue + "T00:00:00");
+    const end = new Date(outValue + "T00:00:00");
+
+    if (!Number.isFinite(start.getTime()) ||
+        !Number.isFinite(end.getTime()) ||
+        end <= start) {
+        if ($("txtDaysNumber")) $("txtDaysNumber").value = "";
+        if ($("txtSubTotal")) $("txtSubTotal").value = "";
+        if ($("txtTotal")) $("txtTotal").value = "";
+        return;
+    }
+
+    const days = Math.round((end - start) / 86400000);
+
+    if ($("txtDaysNumber")) $("txtDaysNumber").value = days;
+
+    calculateTotal();
+}
+
+function calculateTotal() {
+    const days = Number($("txtDaysNumber")?.value) || 1;
+    const rate = Number($("txtRoomRate")?.value) || 0;
+    const advance = Number($("txtAdvance")?.value) || 0;
+    const discount = getSelectedDiscount();
+
+    const discountRate = Math.min(
+        1,
+        Math.max(0, Number(discount?.rate) || 0)
+    );
+
+    const subtotal = Math.max(0, days * rate * (1 - discountRate));
+    const total = subtotal - advance;
+
+    if ($("txtSubTotal")) {
+        $("txtSubTotal").value = subtotal.toFixed(2);
+    }
+
+    if ($("txtTotal")) {
+        $("txtTotal").value = total.toFixed(2);
+    }
+}
+
+/* ==========================================
+   VALIDATION
+========================================== */
+
+function validateReservation(room, guest) {
+    if (!room || !guest) {
+        return "Missing guest or room. Select both before reserving.";
+    }
+
+    const checkIn = $("dtCheckInDate")?.value;
+    const checkOut = $("dtCheckOutDate")?.value;
+    const rate = Number($("txtRoomRate")?.value);
+    const advance = Number($("txtAdvance")?.value || 0);
+
+    if (!checkIn || !checkOut) {
+        return "Please enter both check-in and check-out dates.";
+    }
+
+    const start = new Date(checkIn + "T00:00:00");
+    const end = new Date(checkOut + "T00:00:00");
+
+    if (!Number.isFinite(start.getTime()) ||
+        !Number.isFinite(end.getTime()) ||
+        end <= start) {
+        return "Check-out must be after check-in.";
+    }
+
+    if (!Number.isFinite(rate) || rate < 0) {
+        return "Please enter a valid room rate.";
+    }
+
+    if (!Number.isFinite(advance) || advance < 0) {
+        return "Advance payment cannot be negative.";
+    }
+
+    const days = Math.round((end - start) / 86400000);
+    const discountRate = Math.min(
+        1,
+        Math.max(0, Number(getSelectedDiscount()?.rate) || 0)
+    );
+
+    const subtotal = days * rate * (1 - discountRate);
+
+    if (advance > subtotal) {
+        return "Advance payment cannot exceed the reservation total.";
+    }
+
+    return "";
+}
+
+/* ==========================================
+   SAVE RESERVATION LOCALLY FIRST
+========================================== */
+
+function buildReservation() {
+    const room = getSelectedRoom();
+    const guest = getSelectedGuest();
+    const discount = getSelectedDiscount();
+
+    const checkIn = $("dtCheckInDate").value;
+    const checkOut = $("dtCheckOutDate").value;
+
+    const days = Math.round(
+        (new Date(checkOut + "T00:00:00") -
+         new Date(checkIn + "T00:00:00")) / 86400000
+    );
+
+    const rate = Number($("txtRoomRate").value) || 0;
+    const advance = Number($("txtAdvance")?.value || 0);
+    const discountRate = Math.min(
+        1,
+        Math.max(0, Number(discount?.rate) || 0)
+    );
+
+    const subtotal = days * rate * (1 - discountRate);
+    const total = subtotal - advance;
+
+    return {
+        schemaVersion: 1,
+        transID: $("txtTransID").value.trim() || makeId("TRANS"),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        deviceId: getDeviceId(),
+
+        guest: guest,
+        room: room,
+        discount: discount || null,
+
+        guestName: [guest.first, guest.last]
+            .filter(Boolean).join(" "),
+        roomNumber: room.number ?? "",
+        roomType: room.type ?? "",
+
+        checkIn: checkIn,
+        checkOut: checkOut,
+        days: days,
+        roomRate: rate,
+        advance: advance,
+        subtotal: Number(subtotal.toFixed(2)),
+        total: Number(total.toFixed(2)),
+
+        syncStatus: "PENDING",
+        syncMessage: "Waiting for central database."
+    };
+}
+
+/* ==========================================
+   RESERVATION SUBMISSION
+========================================== */
+
+async function reserve() {
+    const room = getSelectedRoom();
+    const guest = getSelectedGuest();
+
+    const error = validateReservation(room, guest);
+
+    if (error) {
+        alert(error);
+        return;
+    }
+
+    const transID = $("txtTransID")?.value.trim();
+
+    if (!transID) {
+        alert("Transaction ID is missing. Reload the form and try again.");
+        return;
+    }
+
+    const queue = getQueue();
+
+    /*
+      Repeated clicks using the same transaction ID
+      do not create another local queue entry.
+    */
+    if (queue[transID]) {
+        alert("This transaction ID already exists locally. Checking sync status.");
+
+        if (navigator.onLine) {
+            await syncOneReservation(transID);
+        }
+
+        return;
+    }
+
+    const reservation = buildReservation();
+
+    try {
+        queue[reservation.transID] = reservation;
+        saveQueue(queue);
+
+        // Keep a legacy copy for older pages that still expect this key.
+        localStorage.setItem(LEGACY_KEY, JSON.stringify(reservation));
+    } catch (storageError) {
+        console.error(storageError);
+        alert(
+            "The reservation could not be saved on this device. " +
+            "Check browser storage before continuing."
+        );
+        return;
+    }
+
+    /*
+      Attempt sync before navigating away.
+      If the network fails, the saved queue remains for retry.
+    */
+    if (navigator.onLine) {
+        await syncOneReservation(reservation.transID);
+    }
+
+    window.location.href = "check_in_form.html";
+}
+
+/* ==========================================
+   CENTRAL DATABASE API
+========================================== */
+
+async function sendReservationToBackend(reservation) {
+    if (!API_URL ||
+        API_URL.includes("PASTE_YOUR_GOOGLE_APPS_SCRIPT")) {
+        throw new Error("Google Apps Script API URL has not been configured.");
+    }
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 12000);
+
+    try {
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify({
+                action: "saveReservation",
+                reservation: reservation
+            }),
+            signal: controller.signal
+        });
+
+        if (!response.ok) {
+            throw new Error("Backend HTTP status " + response.status);
+        }
+
+        const result = await response.json();
+
+        if (!result || result.success !== true) {
+            throw new Error(
+                result?.message || "Backend did not confirm the reservation."
+            );
+        }
+
+        return result;
+    } finally {
+        clearTimeout(timeout);
+    }
+}
+
+async function syncOneReservation(id) {
+    const queue = getQueue();
+    const reservation = queue[id];
+
+    if (!reservation || reservation.syncStatus === "SYNCED") {
+        return;
+    }
+
+    if (!navigator.onLine) return;
+
+    updateReservationStatus(id, "SYNCING", "Sending to Google Sheets.");
+
+    try {
+        const result = await sendReservationToBackend(reservation);
+
+        if (result.duplicate) {
+            /*
+              The server found the same ID already stored.
+              Treat that as successful reconciliation, not a new insert.
+            */
+            updateReservationStatus(
+                id,
+                "SYNCED",
+                "Already present in central database."
+            );
+        } else {
+            updateReservationStatus(
+                id,
+                "SYNCED",
+                "Confirmed by central database."
+            );
+        }
+
+        console.log("Reservation sync confirmed:", id, result);
+    } catch (error) {
+        console.warn("Reservation remains queued:", id, error);
+
+        updateReservationStatus(
+            id,
+            "PENDING",
+            error.name === "AbortError"
+                ? "Request timed out; will retry."
+                : error.message || "Sync failed; will retry."
+        );
+    }
+}
+
+let syncRunning = false;
+
+async function syncPendingReservations() {
+    if (syncRunning || !navigator.onLine) return;
+
+    syncRunning = true;
+
+    try {
+        const queue = getQueue();
+        const ids = Object.keys(queue);
+
+        for (const id of ids) {
+            const current = getQueue()[id];
+
+            if (current && current.syncStatus !== "SYNCED") {
+                await syncOneReservation(id);
+            }
+        }
+    } finally {
+        syncRunning = false;
+    }
+}
+
+/* Retry on reconnection and when the page becomes active. */
+window.addEventListener("online", syncPendingReservations);
+
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+        syncPendingReservations();
+    }
+});
+
+window.addEventListener("pageshow", syncPendingReservations);
+
+/* Start after the page elements exist. */
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+} else {
+    init();
+}
+
+/* Cancellation keeps the existing navigation flow. */
+function cancelReserve() {
+    window.location.href = "discount.html";
+}
+</script>
+
+
+
+</body></html>

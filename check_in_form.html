@@ -1,0 +1,1606 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <title>Presidential Opinion Poll System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="https://www.iebc.or.ke/images/favicon.png">
+<style>
+    /* ==========================================
+       GREEN CINEMATIC STATE DOCUMENT
+       Screen palette inspired by bright green
+       government-document branding.
+       Not a certified Pantone colour conversion.
+    =========================================== */
+
+    :root {
+        --green-bright: #97D700;
+        --green-deep: #153D2B;
+        --green-dark: #204B35;
+        --green-mid: #36764A;
+        --green-pale: #F2F8E9;
+        --green-tint: #E6F2D4;
+
+        --gold: #C8A85A;
+        --white: #FFFFFF;
+        --page-bg: #F3F6F2;
+        --text: #26342B;
+        --muted: #657267;
+        --border: #D7E1D7;
+        --focus: #276BCE;
+
+        --radius: 5px;
+        --shadow: 0 3px 12px rgba(21, 61, 43, 0.07);
+    }
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: var(--page-bg);
+        color: var(--text);
+        line-height: 1.6;
+        font-size: 15px;
+    }
+
+    /* Cinematic government-style masthead */
+    header {
+        position: relative;
+        overflow: hidden;
+        padding: 24px clamp(18px, 4vw, 48px);
+        color: var(--white);
+        background:
+            linear-gradient(
+                115deg,
+                #102F22 0%,
+                var(--green-deep) 55%,
+                #285A3B 100%
+            );
+        border-bottom: 4px solid var(--green-bright);
+        box-shadow: 0 3px 12px rgba(10, 35, 22, 0.15);
+    }
+
+    header::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 32%;
+        height: 100%;
+        pointer-events: none;
+        background: linear-gradient(
+            110deg,
+            transparent,
+            rgba(151, 215, 0, 0.07)
+        );
+    }
+
+    header h1 {
+        position: relative;
+        z-index: 1;
+        margin: 0;
+        font-size: clamp(21px, 3vw, 30px);
+        line-height: 1.25;
+        font-weight: 700;
+        letter-spacing: 0.25px;
+    }
+
+    /* Thin official-looking identity line */
+    header h1::after {
+        content: "";
+        display: block;
+        width: 64px;
+        height: 3px;
+        margin-top: 12px;
+        background: var(--green-bright);
+    }
+
+    /* Navigation */
+    nav {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px;
+        padding: 0 clamp(12px, 3vw, 36px);
+        background: #183527;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    nav a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 46px;
+        padding: 12px 15px;
+        color: #F3F7F2;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        border-bottom: 2px solid transparent;
+        transition:
+            background-color 0.18s ease,
+            color 0.18s ease,
+            border-color 0.18s ease;
+    }
+
+    nav a:hover {
+        color: var(--green-bright);
+        background: rgba(255, 255, 255, 0.045);
+        border-bottom-color: var(--green-bright);
+        text-decoration: none;
+    }
+
+    nav a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible {
+        outline: 3px solid var(--focus);
+        outline-offset: 2px;
+    }
+
+    /* Main content */
+    main {
+        width: 100%;
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: clamp(16px, 3vw, 36px);
+    }
+
+    /* Clean document panels */
+    section {
+        position: relative;
+        margin-bottom: 24px;
+        padding: clamp(18px, 3vw, 28px);
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-top: 2px solid var(--green-bright);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+    }
+
+    h2 {
+        margin: 0 0 18px;
+        padding-bottom: 11px;
+        color: var(--green-deep);
+        font-size: clamp(18px, 2.5vw, 23px);
+        line-height: 1.35;
+        font-weight: 700;
+        border-bottom: 1px solid var(--border);
+    }
+
+    h3,
+    h4 {
+        color: var(--green-dark);
+    }
+
+    p {
+        line-height: 1.7;
+    }
+
+    /* Form labels */
+    label {
+        display: block;
+        margin-top: 14px;
+        color: #33483A;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    /* Inputs, dropdowns and text areas */
+    input,
+    select,
+    textarea,
+    button {
+        width: 100%;
+        max-width: 100%;
+        min-height: 42px;
+        margin-top: 6px;
+        padding: 10px 12px;
+        border: 1px solid #C9D5C9;
+        border-radius: 3px;
+        font: inherit;
+    }
+
+    input,
+    select,
+    textarea {
+        color: var(--text);
+        background: #FFFFFF;
+        transition:
+            border-color 0.18s ease,
+            box-shadow 0.18s ease;
+    }
+
+    input:hover,
+    select:hover,
+    textarea:hover {
+        border-color: #86A68B;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        outline: none;
+        border-color: var(--green-mid);
+        box-shadow: 0 0 0 3px rgba(151, 215, 0, 0.15);
+    }
+
+    textarea {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    /* Primary action buttons */
+    button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 11px 18px;
+        color: #FFFFFF;
+        background: var(--green-dark);
+        border: 1px solid var(--green-dark);
+        border-radius: 3px;
+        font-weight: 700;
+        cursor: pointer;
+        transition:
+            background-color 0.18s ease,
+            border-color 0.18s ease,
+            transform 0.18s ease;
+    }
+
+    button:hover {
+        background: var(--green-deep);
+        border-color: var(--green-deep);
+    }
+
+    button:active {
+        transform: translateY(1px);
+    }
+
+    /* Tables */
+    table {
+        width: 100%;
+        margin-top: 18px;
+        border-collapse: collapse;
+        background: #FFFFFF;
+        font-size: 14px;
+    }
+
+    table th,
+    table td {
+        padding: 12px 14px;
+        text-align: left;
+        vertical-align: top;
+        border: 1px solid var(--border);
+    }
+
+    table th {
+        color: var(--green-deep);
+        background: var(--green-pale);
+        font-weight: 700;
+        border-bottom: 2px solid #A7C98A;
+    }
+
+    table tbody tr:nth-child(even) {
+        background: #FAFCF8;
+    }
+
+    table tbody tr:hover {
+        background: #F0F7E8;
+    }
+
+    /* Footer */
+    footer {
+        padding: 22px 18px;
+        color: #EAF1E9;
+        text-align: center;
+        font-size: 12px;
+        line-height: 1.7;
+        background: linear-gradient(
+            110deg,
+            #102F22,
+            #1D4630
+        );
+        border-top: 3px solid var(--green-bright);
+    }
+
+    footer a {
+        color: #D5F2A6;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+
+    /* Horizontal table scrolling on small screens */
+    section {
+        overflow-wrap: anywhere;
+    }
+
+    section:has(table) {
+        overflow-x: auto;
+    }
+
+    /* Tablet and mobile */
+    @media (max-width: 700px) {
+        header {
+            padding: 20px 16px;
+        }
+
+        nav {
+            gap: 0;
+            padding: 4px 10px;
+        }
+
+        nav a {
+            min-height: 42px;
+            padding: 10px 11px;
+            font-size: 12px;
+        }
+
+        main {
+            padding: 14px;
+        }
+
+        section {
+            margin-bottom: 16px;
+            padding: 17px;
+        }
+
+        table {
+            min-width: 520px;
+        }
+    }
+
+    /* Respect users who prefer reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
+        }
+
+        *,
+        *::before,
+        *::after {
+            transition-duration: 0.01ms !important;
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+        }
+    }
+
+    .data-note{padding:12px 14px;background:#fff8e6;border-left:4px solid #c8a85a;border-radius:4px;font-size:13px}
+    .candidate-manual[hidden]{display:none}
+    .candidate-manual{margin-top:5px;border-color:#97D700}
+    .candidate-preview{display:flex;align-items:center;gap:12px;padding:10px 12px;margin:8px 0;border:1px solid var(--border);border-radius:6px;background:#f8fbf6;min-height:64px}
+    .candidate-avatar{display:flex;align-items:center;justify-content:center;flex:0 0 46px;width:46px;height:46px;border-radius:50%;background:#dcecc5;color:#153d2b;font-weight:800;font-size:16px;overflow:hidden}
+    .candidate-avatar img{width:100%;height:100%;object-fit:cover}
+    .candidate-preview small{display:block;color:#657267;font-size:12px;margin-top:2px}
+    .form-message{padding:10px 12px;border-radius:4px;background:#f2f8e9;overflow-wrap:anywhere}
+    .consent-row{display:flex;align-items:flex-start;gap:8px;margin:12px 0}
+    .consent-row input{width:auto;margin-top:4px}
+    .poll-result-group{padding:12px;margin:12px 0;border:1px solid var(--border);border-radius:6px;background:#fff}
+    .poll-result-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #edf2ee}
+    .poll-result-row:last-child{border-bottom:0}
+    .candidate-avatar img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%}
+    button:disabled{opacity:.65;cursor:wait}
+
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Presidential Opinion Poll Information System</h1>
+</header>
+
+<nav>
+    <a href="#registration">Voter Registration</a>
+    <a href="#poll">Cast Opinion</a>
+    <a href="#stations">Poll Stations</a>
+    <a href="#stationEntry">Submit Results</a>
+    <a href="#reports">Reports</a>
+</nav>
+
+<main>
+
+    <!-- Registration Section -->
+    <section id="registration">
+        <h2>Voter Registration</h2>
+        <form id="registrationForm">
+            <label>Name</label>
+            <input id="voterName" type="text" placeholder="Full Name" required="">
+
+            <label>Sub-location ID</label>
+            <input id="subLocationId" type="text" placeholder="Sub-location" required="">
+
+            <label>Location ID</label>
+            <input id="locationId" type="text" placeholder="Location" required="">
+
+            <label>Division ID</label>
+            <input id="divisionId" type="text" placeholder="Division" required="">
+
+            <label>District ID</label>
+            <input id="districtId" type="text" placeholder="District" required="">
+            <label class="consent-row"><input id="registrationConsent" type="checkbox" required> I consent to this information being used for this independent research prototype.</label>
+            <button type="submit">Register Voter</button>
+        </form>
+    </section>
+
+    <!-- Poll Section -->
+    <section id="poll">
+        <h2>Independent Electoral and Boundaries Commission Elections Opinion Poll 2027</h2>
+        <form id="opinionPollForm">
+            <p class="data-note"><strong>Candidate data note:</strong> Candidate names are a snapshot of Baraza’s public aspirant directory last updated 28 October 2026: 21 presidential, 130 governor, 44 senator, 43 woman-representative, 481 MP and 176 MCA listings. These are reported aspirants, not IEBC-cleared candidates. The MP/MCA lists in this offline file are partial; use the sourced directory at <a href="https://www.baraza.or.ke/aspirants" target="_blank" rel="noopener">Baraza’s aspirant directory</a> to verify names by county and seat before treating them as candidates.</p>
+            <label for="pollCounty">County</label>
+            <select id="pollCounty" required><option value="" selected disabled>Select county</option></select>
+            <label for="pollConstituency">Constituency (for MP selection)</label>
+            <select id="pollConstituency"><option value="">Select county first</option></select>
+            <div class="candidate-preview" id="presidentialPreview" aria-live="polite"><span class="candidate-avatar">?</span><span><strong>Presidential candidate</strong><small>Select a name to view the candidate card.</small></span></div>
+            <div class="candidate-preview" id="governorPreview" aria-live="polite"><span class="candidate-avatar">?</span><span><strong>Governor candidate</strong><small>Portrait preview will appear when verified candidate data is loaded.</small></span></div>
+            <div class="candidate-preview" id="senatorPreview" aria-live="polite"><span class="candidate-avatar">?</span><span><strong>Senator candidate</strong><small>Portrait preview will appear when verified candidate data is loaded.</small></span></div>
+            <div class="candidate-preview" id="mpPreview" aria-live="polite"><span class="candidate-avatar">?</span><span><strong>MP candidate</strong><small>Select a county and constituency first.</small></span></div>
+            <div class="candidate-preview" id="womanRepPreview" aria-live="polite"><span class="candidate-avatar">?</span><span><strong>Woman Representative candidate</strong><small>Portrait preview will appear when verified candidate data is loaded.</small></span></div>
+            <div class="candidate-preview" id="mcaPreview" aria-live="polite"><span class="candidate-avatar">?</span><span><strong>MCA candidate</strong><small>Ward-specific verified candidate data is needed.</small></span></div>
+            <label for="pollStation">Poll location (county / constituency)</label>
+            <select id="pollStation" required>
+                <option value="" selected disabled>Select county first</option>
+            </select>
+            <p class="small-print">This is a voluntary opinion poll, not an IEBC voter register or official polling-station list.</p>
+
+            <label>Preferred Presidential Candidate</label>
+           <select id="presidentialCandidate" required="">
+                <option value="">Choose a reported aspirant (not IEBC-cleared)</option>
+                <option value="Bob Njagi — reported 2027 aspirant (unverified)">Bob Njagi — reported aspirant (unverified)</option>
+                <option value="Boniface Mwangi — reported 2027 aspirant (unverified)">Boniface Mwangi — reported aspirant (unverified)</option>
+                <option value="David Maraga — reported 2027 aspirant (unverified)">David Maraga — reported aspirant (unverified)</option>
+                <option value="Edwin Sifuna — reported 2027 aspirant (unverified)">Edwin Sifuna — reported aspirant (unverified)</option>
+                <option value="Ekuru Aukot — reported 2027 aspirant (unverified)">Ekuru Aukot — reported aspirant (unverified)</option>
+                <option value="Eliud Owalo — reported 2027 aspirant (unverified)">Eliud Owalo — reported aspirant (unverified)</option>
+                <option value="Eugene Wamalwa — reported 2027 aspirant (unverified)">Eugene Wamalwa — reported aspirant (unverified)</option>
+                <option value="Fred Matiang'i — reported 2027 aspirant (unverified)">Fred Matiang'i — reported aspirant (unverified)</option>
+                <option value="George Wajackoyah — reported 2027 aspirant (unverified)">George Wajackoyah — reported aspirant (unverified)</option>
+                <option value="James Orengo — reported 2027 aspirant (unverified)">James Orengo — reported aspirant (unverified)</option>
+                <option value="Jimi Wanjigi — reported 2027 aspirant (unverified)">Jimi Wanjigi — reported aspirant (unverified)</option>
+                <option value="Kalonzo Musyoka — reported 2027 aspirant (unverified)">Kalonzo Musyoka — reported aspirant (unverified)</option>
+                <option value="Macharia Njeru — reported 2027 aspirant (unverified)">Macharia Njeru — reported aspirant (unverified)</option>
+                <option value="Martha Karua — reported 2027 aspirant (unverified)">Martha Karua — reported aspirant (unverified)</option>
+                <option value="Miguna Miguna — reported 2027 aspirant (unverified)">Miguna Miguna — reported aspirant (unverified)</option>
+                <option value="Ndindi Nyoro — reported 2027 aspirant (unverified)">Ndindi Nyoro — reported aspirant (unverified)</option>
+                <option value="Okiya Omtatah — reported 2027 aspirant (unverified)">Okiya Omtatah — reported aspirant (unverified)</option>
+                <option value="Peter Salasya — reported 2027 aspirant (unverified)">Peter Salasya — reported aspirant (unverified)</option>
+                <option value="Reuben Kigame — reported 2027 aspirant (unverified)">Reuben Kigame — reported aspirant (unverified)</option>
+                <option value="Rigathi Gachagua — reported 2027 aspirant (unverified)">Rigathi Gachagua — reported aspirant (unverified)</option>
+                <option value="William Samoei Ruto — reported 2027 aspirant (unverified)">William Samoei Ruto — reported aspirant (unverified)</option>
+                <option value="2022 historical result — William Samoei Ruto">2022 historical result — William Samoei Ruto</option>
+                <option value="2022 historical result — Raila Amolo Odinga">2022 historical result — Raila Amolo Odinga</option>
+                <option value="2022 historical result — George Luchiri Wajackoyah">2022 historical result — George Luchiri Wajackoyah</option>
+                <option value="2022 historical result — David Mwaure Waihiga">2022 historical result — David Mwaure Waihiga</option>
+                <option value="OTHER — manually recorded">Other / name not listed</option>
+            </select>
+            <input id="presidentialCandidateManual" class="candidate-manual" type="text" placeholder="Type presidential aspirant name" aria-label="Type presidential aspirant name" hidden>
+             <label> Preferred Governorial Candidate</label>
+             <select id="governorCandidate" required="">
+                <option value="">Choose Governor candidate</option>
+                <option value="OTHER — manually recorded">Other / candidate not yet listed</option>
+            </select>
+            <input id="governorCandidateManual" class="candidate-manual" type="text" placeholder="Type governor candidate name" aria-label="Type governor candidate name" hidden>
+             <label>Preferred Senatorial Candidate</label>
+             <select id="senatorCandidate" required="">
+                <option value="">Choose Senator candidate</option>
+                <option value="OTHER — manually recorded">Other / candidate not yet listed</option>
+            </select>
+            <input id="senatorCandidateManual" class="candidate-manual" type="text" placeholder="Type senator candidate name" aria-label="Type senator candidate name" hidden>
+             <label>Preferred Member of Parliament</label>
+             <select id="mpCandidate" required="">
+                <option value="">Choose Member of Parliament candidate</option>
+                <option value="OTHER — manually recorded">Other / candidate not yet listed</option>
+            </select>
+            <input id="mpCandidateManual" class="candidate-manual" type="text" placeholder="Type MP candidate name" aria-label="Type MP candidate name" hidden>
+              <label>Preferred Woman Representative Candidate</label>
+             <select id="womanRepCandidate" required="">
+                <option value="">Choose Woman Representative candidate</option>
+                <option value="OTHER — manually recorded">Other / candidate not yet listed</option>
+            </select>
+            <input id="womanRepCandidateManual" class="candidate-manual" type="text" placeholder="Type Woman Representative candidate name" aria-label="Type Woman Representative candidate name" hidden>
+               <label>Preferred Member of County Assembly</label>
+              <select id="mcaCandidate" required="">
+                <option value="">Choose Member of County Assembly candidate</option>
+                <option value="OTHER — manually recorded">Other / candidate not yet listed</option>
+            </select>
+            <input id="mcaCandidateManual" class="candidate-manual" type="text" placeholder="Type MCA candidate name" aria-label="Type MCA candidate name" hidden>
+            <label>Reason for Choice (Optional)</label>
+           <textarea id="pollReason" rows="4"></textarea>
+<label>
+    <input id="pollConsent" type="checkbox" required="">
+    I understand that this is an independent opinion poll and consent
+    to the use of my responses for aggregated statistical reporting.
+</label>
+            <button type="submit">Submit Opinion</button>
+            <button type="button" onclick="syncPendingRecords().then(()=>displayFormMessage(document.getElementById('opinionPollForm'),'Sync attempt complete. Check whether the pending queue is empty; only server-confirmed responses are central.')).catch(e=>displayFormMessage(document.getElementById('opinionPollForm'),e.message,true))">Sync pending submissions</button>
+        </form>
+    </section>
+
+    <!-- Poll Station Section -->
+    <section id="nationwidePollDashboard">
+    <h2>Nationwide Opinion Poll Summary</h2>
+    <p>Independent opinion-poll results, aggregated from submitted responses.</p>
+
+    <button type="button" onclick="loadNationwidePollResults()">
+        Refresh Nationwide Results
+    </button>
+
+    <div id="nationwidePollResults" aria-live="polite">Select “Refresh Nationwide Results” to load records from the connected database.</div>
+</section>
+
+<script>
+function formatPercentage(count, total) {
+    return total > 0
+        ? ((count / total) * 100).toFixed(3) + "%"
+        : "0.000%";
+}
+
+async function loadNationwidePollResults() {
+    const output = document.getElementById("nationwidePollResults");
+    output.textContent = "Fetching nationwide opinion-poll summary…";
+    try {
+        const url = new URL(CENTRAL_API_URL);
+        url.searchParams.set("action", "getNationwideOpinionPoll");
+        const response = await fetch(url.toString());
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        const result = await response.json();
+        if (!result.success || !result.positions) throw new Error(result.message || "The API did not return its positions summary.");
+        const labels = {
+            presidential: "Presidential",
+            governor: "Governor",
+            senator: "Senator",
+            mp: "Member of Parliament",
+            womanRepresentative: "Woman Representative",
+            mca: "Member of County Assembly"
+        };
+        output.replaceChildren();
+        const total = document.createElement("p");
+        total.textContent = "Total recorded responses: " + Number(result.totalResponses || 0) + " (not official election results)";
+        output.appendChild(total);
+        Object.entries(labels).forEach(([key, label]) => {
+            const data = result.positions[key] || {totalResponses:0, results:[]};
+            const section = document.createElement("section");
+            section.className = "poll-result-group";
+            const heading = document.createElement("h3");
+            heading.textContent = label + " preference · " + Number(data.totalResponses || 0) + " responses";
+            section.appendChild(heading);
+            const candidates = Array.isArray(data.results) ? data.results : [];
+            if (!candidates.length) {
+                const empty = document.createElement("p"); empty.textContent = "No responses recorded for this seat yet."; section.appendChild(empty);
+            } else {
+                candidates.forEach(item => {
+                    const row = document.createElement("div"); row.className = "poll-result-row";
+                    const name = document.createElement("span"); name.textContent = item.candidate || "Unspecified";
+                    const count = document.createElement("strong"); count.textContent = Number(item.votes || 0) + " · " + Number(item.percentage || 0).toFixed(2) + "%";
+                    row.append(name, count); section.appendChild(row);
+                });
+            }
+            output.appendChild(section);
+        });
+        const note = document.createElement("p"); note.className = "data-note"; note.textContent = result.note || "Percentages represent submitted opinion-poll responses only."; output.appendChild(note);
+    } catch (error) {
+        output.textContent = "Unable to load nationwide results: " + (error.message || "Check the internet connection and Apps Script deployment.");
+    }
+}
+</script>
+<section id="stations">
+        <h2>Poll Stations</h2>
+        <table>
+            <tbody><tr>
+                <th>Station ID</th>
+                <th>Name</th>
+                <th>VOTER REGISTRATION TURNOUT</th>
+            </tr>
+            <tr>
+                <td>001</td>
+                <td>TURKANA</td>
+                <td>57%</td>
+            </tr>
+            <tr>
+                <td>002</td>
+                <td>WEST POKOT</td>
+                <td>75%</td>
+            </tr>
+              <tr>
+                <td>003</td>
+                <td>TRANS NZOIA</td>
+                <td>75%</td>
+            </tr>
+                <tr>
+                <td>004</td>
+                <td>UASIN GISHU</td>
+                <td>87%</td>
+            </tr>
+             <tr>
+                <td>005</td>
+                <td>BUNGOMA</td>
+                <td>65%</td>
+            </tr>
+             <tr>
+                <td>006</td>
+                <td>BUSIA</td>
+                <td>70%</td>
+            </tr>
+             <tr>
+                <td>007</td>
+                <td>NANDI</td>
+                <td>69%</td>
+            </tr>
+
+                <tr>
+                <td>008</td>
+                <td>KAKAMEGA</td>
+                <td>74%</td>
+            </tr>
+                <tr>
+                <td>009</td>
+                <td>VIHIGA</td>
+                <td>87%</td>
+            </tr>
+               <tr>
+                <td>010</td>
+                <td>SIAYA</td>
+                <td>69%</td>
+            </tr>
+               <tr>
+                <td>011</td>
+                <td>KISUMU</td>
+                <td>73%</td>
+            </tr>
+                <tr>
+                <td>012</td>
+                <td>KERICHO</td>
+                <td>64%</td>
+            </tr>
+                  <tr>
+                <td>013</td>
+                <td>HOMA BAY</td>
+                <td>68%</td>
+            </tr>
+                  <tr>
+                <td>014</td>
+                <td>KISII</td>
+                <td>89%</td>
+            </tr>
+                    <tr>
+                <td>015</td>
+                <td>MIGORI</td>
+                <td>81%</td>
+            </tr>
+                    <tr>
+                <td>016</td>
+                <td>NYAMIRA</td>
+                <td>68%</td>
+            </tr>
+                     <tr>
+                <td>017</td>
+                <td>BOMET</td>
+                <td>76%</td>
+            </tr>
+                    <tr>
+                <td>018</td>
+                <td>NYANDARUA</td>
+                <td>91%</td>
+            </tr>
+                       <tr>
+                <td>019</td>
+                <td>NYERI</td>
+                <td>96%</td>
+            </tr>
+                   <tr>
+                <td>020</td>
+                <td>KIAMBU</td>
+                <td>98%</td>
+            </tr>
+                    <tr>
+                <td>021</td>
+                <td>NAIROBI</td>
+                <td>74%</td>
+            </tr>
+                   <tr>
+                <td>022</td>
+                <td>MOMBASA</td>
+                <td>91%</td>
+            </tr>
+                  <tr>
+                <td>023</td>
+                <td>THARAKA-NITHI</td>
+                <td>93%</td>
+            </tr>
+                   <tr>
+                <td>024</td>
+                <td>KIRINYAGA</td>
+                <td>87%</td>
+            </tr>
+                   <tr>
+                <td>025</td>
+                <td>EMBU</td>
+                <td>94%</td>
+            </tr>
+                  <tr>
+                <td>026</td>
+                <td>MURANG'A</td>
+                <td>87%</td>
+            </tr>
+                     <tr>
+                <td>027</td>
+                <td>MARSABIT</td>
+                <td>52%</td>
+            </tr>
+                     <tr>
+                <td>028</td>
+                <td>MANDERA</td>
+                <td>54%</td>
+            </tr>
+                   <tr>
+                <td>029</td>
+                <td>WAJIR</td>
+                <td>50%</td>
+            </tr>
+                   <tr>
+                <td>030</td>
+                <td>ISIOLO</td>
+                <td>56%</td>
+            </tr>
+                   <tr>
+                <td>031</td>
+                <td>GARISSA</td>
+                <td>65%</td>
+            </tr>
+                    <tr>
+                <td>032</td>
+                <td>TANA RIVER</td>
+                <td>58%</td>
+            </tr>
+                   <tr>
+                <td>033</td>
+                <td>KITUI</td>
+                <td>89%</td>
+            </tr>
+                  <tr>
+                <td>034</td>
+                <td>KILIFI</td>
+                <td>81%</td>
+            </tr>
+                  <tr>
+                <td>035</td>
+                <td>TAITA TAVETA</td>
+                <td>90%</td>
+            </tr>
+                   <tr>
+                <td>036</td>
+                <td>KAJIADO</td>
+                <td>81%</td>
+            </tr>
+                   <tr>
+                <td>037</td>
+                <td>NAROK</td>
+                <td>74%</td>
+            </tr>
+                  <tr>
+                <td>038</td>
+                <td>NAKURU</td>
+                <td>57%</td>
+            </tr>
+                   <tr>
+                <td>039</td>
+                <td>BARINGO</td>
+                <td>60%</td>
+            </tr>
+                   <tr>
+                <td>040</td>
+                <td>SAMBURU</td>
+                <td>76%</td>
+            </tr>
+                  <tr>
+                <td>041</td>
+                <td>ISIOLO</td>
+                <td>56%</td>
+            </tr>
+                   <tr>
+                <td>042</td>
+                <td>LAIKIPIA</td>
+                <td>80%</td>
+            </tr>
+                  <tr>
+                <td>043</td>
+                <td>MERU</td>
+                <td>85%</td>
+            </tr>
+                  <tr>
+                <td>044</td>
+                <td>MACHAKOS</td>
+                <td>93%</td>
+            </tr>
+                   <tr>
+                <td>045</td>
+                <td>MAKUENI</td>
+                <td>70%</td>
+            </tr>
+                   <tr>
+                <td>046</td>
+                <td>KAJIADO</td>
+                <td>81%</td>
+            </tr>
+                    <tr>
+                <td>047</td>
+                <td>LAMU</td>
+                <td>81%</td>
+            </tr>
+                 <tr>
+                  <td>Average Stats Report</td>
+                   <td>KENYA</td>
+                  <td>76%</td>
+            </tr>
+        </tbody></table>
+    </section>
+
+    <!-- Reports Section -->
+    
+
+
+    <!-- Station Results Entry: fields required by the existing JavaScript handler -->
+    <section id="stationEntry">
+        <h2>Submit Poll-Station Results</h2>
+        <p><strong>Independent research prototype.</strong> This is not an official IEBC submission portal. Enter only data you are authorized to record.</p>
+        <form id="voteForm">
+            <label for="electionId">Election / Study ID</label>
+            <input id="electionId" type="text" required placeholder="e.g. STUDY-2027-01">
+            <label for="stationId">Unique Poll-Station ID</label>
+            <input id="stationId" type="text" required placeholder="e.g. ST-001">
+            <label for="station">Poll-Station Name</label>
+            <input id="station" type="text" required placeholder="Station name">
+            <label for="operatorId">Observer / Operator ID (optional)</label>
+            <input id="operatorId" type="text" placeholder="Your assigned code; do not enter passwords">
+            <label for="registered">Registered Voters</label>
+            <input id="registered" type="number" min="0" step="1" required value="0">
+            <label for="turnout">Total Votes Cast</label>
+            <input id="turnout" type="number" min="0" step="1" required value="0">
+            <label for="candidateX">Candidate X — Valid Votes</label>
+            <input id="candidateX" type="number" min="0" step="1" required value="0">
+            <p>Candidate X share: <output id="percentageX">0.000%</output></p>
+            <label for="candidateY">Candidate Y — Valid Votes</label>
+            <input id="candidateY" type="number" min="0" step="1" required value="0">
+            <p>Candidate Y share: <output id="percentageY">0.000%</output></p>
+            <label for="candidateZ">Candidate Z — Valid Votes</label>
+            <input id="candidateZ" type="number" min="0" step="1" required value="0">
+            <p>Candidate Z share: <output id="percentageZ">0.000%</output></p>
+            <label for="rejected">Rejected / Invalid Votes</label>
+            <input id="rejected" type="number" min="0" step="1" required value="0">
+            <button type="submit">Check and Submit Results</button>
+            <p class="form-message" aria-live="polite">If the network is unavailable, valid results can be queued on this device. A queued result is not a confirmed central submission.</p>
+        </form>
+    </section>
+
+    <section id="reports">
+        <h2>Opinion Poll Reports</h2>
+        <h2>Fetch Central Election Results</h2>
+
+<label for="fetchElectionId">Election ID</label>
+<input id="fetchElectionId" required="">
+
+<label for="fetchStationId">Polling Station ID</label>
+<input id="fetchStationId" required="">
+
+<button type="button" onclick="fetchStationResults()">
+    Fetch Results
+</button>
+
+<p>Station: <output id="fetchedStation"></output></p>
+<p>Registered voters: <output id="fetchedRegistered"></output></p>
+<p>Votes cast: <output id="fetchedCast"></output></p>
+<p>Valid votes: <output id="fetchedValid"></output></p>
+<p>Rejected votes: <output id="fetchedRejected"></output></p>
+
+<p>Candidate X: <output id="fetchedX"></output>
+    (<output id="fetchedPercentageX"></output>)</p>
+
+<p>Candidate Y: <output id="fetchedY"></output>
+    (<output id="fetchedPercentageY"></output>)</p>
+
+<p>Candidate Z: <output id="fetchedZ"></output>
+    (<output id="fetchedPercentageZ"></output>)</p>
+
+<div id="status" aria-live="polite" class="success" style="display: block;">Ready. Enter an election ID and station ID to fetch a saved record.</div>
+        <p><em>Note: Results shown are for demonstration purposes only.</em></p>
+    </section>
+
+</main>
+
+<footer>
+    © 2026 Presidential Opinion Poll System | For Research and Academic Use
+</footer><script>
+/* ==========================================
+   CENTRAL ELECTION RESULTS API
+   Google Sheets + Google Apps Script
+========================================== */
+
+const ELECTION_API_URL = "https://script.google.com/macros/s/AKfycbx7ZtogE6YPh27eNqKixsBPzxOj7bh1RqSA5VJSaHXOBBYZbZnpwoGEJt3sFoh1DjG-/exec";
+
+/* Keep the results loaded from the central database */
+let stations = [];
+
+/* ==========================================
+   HELPERS
+========================================== */
+
+function fieldValue(id) {
+    return document.getElementById(id)?.value.trim() || "";
+}
+
+function numberValue(id) {
+    const field = document.getElementById(id);
+    return field ? Number(field.value) : NaN;
+}
+
+function showMessage(message, type = "success") {
+    const element =
+        document.getElementById("status") ||
+        document.getElementById("errorMsg");
+
+    if (!element) {
+        alert(message);
+        return;
+    }
+
+    element.textContent = message;
+    element.className = type;
+    element.style.display = "block";
+}
+
+/* Use three decimal places for percentages */
+function calculatePercentage(votes, totalVotes) {
+    if (!Number.isFinite(votes) ||
+        !Number.isFinite(totalVotes) ||
+        totalVotes <= 0) {
+        return "0.000%";
+    }
+
+    return ((votes / totalVotes) * 100).toFixed(3) + "%";
+}
+
+/* Call the Apps Script API */
+async function apiGet(action, params = {}) {
+    const url = new URL(ELECTION_API_URL);
+    url.searchParams.set("action", action);
+    Object.entries(params).forEach(([key, value]) => url.searchParams.set(key, value));
+    try {
+        const response = await fetch(url.toString());
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        const result = await response.json();
+        if (result.success === false) throw new Error(result.message || "API request failed.");
+        return result;
+    } catch (error) {
+        if (action === "checkElectionDuplicate") {
+            const queued = readLocalQueue("electionResultPendingSync");
+            const duplicate = queued.some(r => r.electionId === params.electionId && r.locationId === params.locationId);
+            return { duplicate, offline: true };
+        }
+        const cached = readLocalQueue("electionResultsCache");
+        const found = cached.find(r => r.electionId === params.electionId && r.locationId === params.locationId);
+        if (found) return { found: true, record: found };
+        throw new Error("Could not reach the central server. Check your connection and try again.");
+    }
+}
+
+async function apiPost(payload) {
+    try {
+        const response = await fetch(ELECTION_API_URL, {
+            method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify(payload)
+        });
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        const result = await response.json();
+        if (result.success === false) throw new Error(result.message || "The server rejected the request.");
+        return result;
+    } catch (error) {
+        if (payload.action === "saveElectionResult" && payload.record) {
+            const r = payload.record;
+            const queued = readLocalQueue("electionResultPendingSync");
+            if (queued.some(x => x.electionId === r.electionId && x.locationId === r.locationId)) {
+                throw new Error("This station result is already queued on this device.");
+            }
+            queued.push(r);
+            if (!writeLocalQueue("electionResultPendingSync", queued)) throw new Error("Offline storage is unavailable; result was not saved.");
+            const cache = readLocalQueue("electionResultsCache"); cache.push(r); writeLocalQueue("electionResultsCache", cache);
+            return { success: true, localPending: true, message: "Saved on this device only. Central database has not confirmed receipt; sync when online." };
+        }
+        throw new Error("Central database unavailable. " + error.message);
+    }
+}
+
+/* ==========================================
+   GPS LOCATION
+========================================== */
+
+function getDeviceLocation() {
+    return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) { resolve(null); return; }
+
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                resolve({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    accuracyMeters: position.coords.accuracy,
+                    capturedAt: new Date(
+                        position.timestamp
+                    ).toISOString()
+                });
+            },
+            error => {
+                const messages = {
+                    1: "Location permission was denied.",
+                    2: "The device location is unavailable.",
+                    3: "The location request timed out."
+                };
+
+                resolve(null);
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 20000,
+                maximumAge: 0
+            }
+        );
+    });
+}
+
+/* ==========================================
+   UPDATE PERCENTAGE DISPLAYS
+========================================== */
+
+function updateVotePercentages() {
+    const total = numberValue("turnout");
+
+    const candidates = [
+        ["candidateX", "percentageX"],
+        ["candidateY", "percentageY"],
+        ["candidateZ", "percentageZ"]
+    ];
+
+    candidates.forEach(([inputId, outputId]) => {
+        const votes = numberValue(inputId);
+        const output = document.getElementById(outputId);
+
+        if (output) {
+            output.textContent =
+                Number.isFinite(votes) && votes >= 0
+                    ? calculatePercentage(votes, total)
+                    : "—";
+        }
+    });
+}
+
+/* Update percentages whenever vote totals change */
+["candidateX", "candidateY", "candidateZ", "turnout"]
+    .forEach(id => {
+        document.getElementById(id)?.addEventListener(
+            "input",
+            updateVotePercentages
+        );
+    });
+
+/* ==========================================
+   SUBMIT RESULTS TO CENTRAL DATABASE
+========================================== */
+
+document.getElementById("voteForm")
+    ?.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const submitButton = this.querySelector(
+            'button[type="submit"], input[type="submit"]'
+        );
+
+        if (submitButton) submitButton.disabled = true;
+
+        try {
+            const electionId = fieldValue("electionId");
+            const stationId = fieldValue("stationId");
+            const station = fieldValue("station");
+
+            const candidateX = numberValue("candidateX");
+            const candidateY = numberValue("candidateY");
+            const candidateZ = numberValue("candidateZ");
+            const turnout = numberValue("turnout");
+
+            if (!electionId || !stationId || !station) {
+                throw new Error(
+                    "Enter the election ID, unique station ID and station name."
+                );
+            }
+
+            const registered = numberValue("registered");
+            const rejected = numberValue("rejected");
+            const values = [
+                registered, candidateX, candidateY, candidateZ, turnout, rejected
+            ];
+
+            if (values.some(value =>
+                !Number.isInteger(value) || value < 0
+            )) {
+                throw new Error(
+                    "Registered voters and all vote totals must be non-negative whole numbers."
+                );
+            }
+
+            if (turnout > registered) {
+                throw new Error("Votes cast cannot exceed registered voters.");
+            }
+
+            const validVotes = candidateX + candidateY + candidateZ;
+
+            if (validVotes > turnout) {
+                throw new Error(
+                    "Candidate votes cannot exceed the total votes cast."
+                );
+            }
+
+            /* Ask the server whether this station already has a record */
+            showMessage("Checking for duplicate records...", "warning");
+
+            const duplicateCheck = await apiGet(
+                "checkElectionDuplicate",
+                {
+                    electionId: electionId,
+                    locationId: stationId
+                }
+            );
+
+            if (duplicateCheck.duplicate) {
+                throw new Error(
+                    "A record already exists for this election and station. " +
+                    "Submission stopped to prevent accidental overwriting."
+                );
+            }
+
+            /* Obtain current device location with operator permission */
+            showMessage("Requesting device location...", "warning");
+
+            const gps = await getDeviceLocation();
+
+            const record = {
+                electionId: electionId,
+                locationId: stationId,
+                locationName: station,
+
+                registered: registered,
+                cast: turnout,
+                valid: validVotes,
+                rejected: rejected,
+
+                candidates: {
+                    X: candidateX,
+                    Y: candidateY,
+                    Z: candidateZ
+                },
+
+                /* These fields require the backend schema update below */
+                gps: gps,
+
+                percentages: {
+                    X: calculatePercentage(candidateX, validVotes),
+                    Y: calculatePercentage(candidateY, validVotes),
+                    Z: calculatePercentage(candidateZ, validVotes)
+                },
+
+                updatedBy: fieldValue("operatorId") || "unspecified",
+                submittedAt: new Date().toISOString()
+            };
+
+            /* Confirm the totals before submission */
+            if (record.valid + record.rejected !== record.cast) {
+                throw new Error(
+                    "Candidate votes plus rejected votes must equal votes cast."
+                );
+            }
+
+            showMessage("Submitting results to the central database...", "warning");
+
+            const saved = await apiPost({
+                action: "saveElectionResult",
+                record: record
+            });
+
+            showMessage(
+                saved.message || "Results saved successfully.",
+                "success"
+            );
+
+            updateVotePercentages();
+
+        } catch (error) {
+            showMessage(error.message, "error");
+        } finally {
+            if (submitButton) submitButton.disabled = false;
+        }
+    });
+
+/* ==========================================
+   FETCH ONE STATION INTO ANOTHER HTML FORM
+========================================== */
+
+async function fetchStationResults() {
+    try {
+        const electionId = fieldValue("fetchElectionId");
+        const stationId = fieldValue("fetchStationId");
+
+        if (!electionId || !stationId) {
+            throw new Error("Enter the election ID and station ID.");
+        }
+
+        showMessage("Fetching central results...", "warning");
+
+        const response = await apiGet("getElectionResult", {
+            electionId: electionId,
+            locationId: stationId
+        });
+
+        if (!response.found || !response.record) {
+            throw new Error("No matching station record was found.");
+        }
+
+        const record = response.record;
+        const candidates = record.candidates || {};
+
+        /* Fill fields in the receiving HTML form */
+        const outputFields = {
+            fetchedStation: record.locationName,
+            fetchedRegistered: record.registered,
+            fetchedCast: record.cast,
+            fetchedValid: record.valid,
+            fetchedRejected: record.rejected,
+            fetchedX: candidates.X ?? 0,
+            fetchedY: candidates.Y ?? 0,
+            fetchedZ: candidates.Z ?? 0
+        };
+
+        Object.entries(outputFields).forEach(([id, value]) => {
+            const element = document.getElementById(id);
+
+            if (element) {
+                element.value = value;
+                element.textContent = value;
+            }
+        });
+
+        /* Calculate percentages using the fetched valid votes */
+        const validVotes = Number(record.valid) || 0;
+
+        [
+            ["fetchedPercentageX", candidates.X ?? 0],
+            ["fetchedPercentageY", candidates.Y ?? 0],
+            ["fetchedPercentageZ", candidates.Z ?? 0]
+        ].forEach(([id, votes]) => {
+            const element = document.getElementById(id);
+
+            if (element) {
+                element.textContent =
+                    calculatePercentage(Number(votes), validVotes);
+            }
+        });
+
+        showMessage("Central results loaded successfully.", "success");
+
+    } catch (error) {
+        showMessage("Fetch failed: " + error.message, "error");
+    }
+}
+</script>
+
+<script>
+const CENTRAL_API_URL = "https://script.google.com/macros/s/AKfycbx7ZtogE6YPh27eNqKixsBPzxOj7bh1RqSA5VJSaHXOBBYZbZnpwoGEJt3sFoh1DjG-/exec";
+
+function readLocalQueue(key) {
+    try { return JSON.parse(localStorage.getItem(key) || "[]"); }
+    catch (_) { return []; }
+}
+function writeLocalQueue(key, rows) {
+    try { localStorage.setItem(key, JSON.stringify(rows)); return true; }
+    catch (_) { return false; }
+}
+function queueLocalRecord(key, record) {
+    const rows = readLocalQueue(key);
+    rows.push(record);
+    return writeLocalQueue(key, rows);
+}
+async function postToCentralDatabase(action, data) {
+    const payload = { action, data };
+    let response;
+    let result;
+    try {
+        response = await fetch(CENTRAL_API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify(payload)
+        });
+        result = await response.json();
+    } catch (networkError) {
+        // Queue only when the request could not reach/read the server.
+        const saved = queueLocalRecord("electionPendingSync", {
+            id: "LOCAL-" + Date.now() + "-" + Math.random().toString(36).slice(2,8),
+            action, data, queuedAt: new Date().toISOString(), lastError: networkError.message
+        });
+        if (!saved) throw new Error("The server could not be reached and browser storage is unavailable. Nothing was saved.");
+        return { success: true, localPending: true, message: "Saved on this device only. Waiting to sync; the central database has NOT confirmed receipt." };
+    }
+    if (!response.ok) throw new Error("Server returned HTTP " + response.status + ". Please try again.");
+    if (!result || result.success !== true) throw new Error((result && result.message) || "The server rejected this submission. Nothing was saved centrally.");
+    return result;
+}
+async function syncPendingRecords() {
+    if (!navigator.onLine) return;
+    const rows = readLocalQueue("electionPendingSync");
+    if (!rows.length) return;
+    const remaining = [];
+    for (const row of rows) {
+        try {
+            const response = await fetch(CENTRAL_API_URL, {
+                method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({ action: row.action, data: row.data })
+            });
+            const result = response.ok ? await response.json() : { success: false };
+            if (!response.ok || !result.success) remaining.push(row);
+        } catch (_) { remaining.push(row); }
+    }
+    writeLocalQueue("electionPendingSync", remaining);
+    const resultRows = readLocalQueue("electionResultPendingSync");
+    const resultRemaining = [];
+    for (const record of resultRows) {
+        try {
+            const response = await fetch(ELECTION_API_URL, {
+                method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({ action: "saveElectionResult", record })
+            });
+            const result = response.ok ? await response.json() : { success: false };
+            if (!response.ok || !result.success) resultRemaining.push(record);
+        } catch (_) { resultRemaining.push(record); }
+    }
+    writeLocalQueue("electionResultPendingSync", resultRemaining);
+}
+window.addEventListener("online", syncPendingRecords);
+window.addEventListener("load", syncPendingRecords);
+
+function getCandidateChoice(id) {
+    const select = document.getElementById(id);
+    if (!select) return "";
+    if (select.value.startsWith("OTHER")) {
+        return document.getElementById(id + "Manual")?.value.trim() || "";
+    }
+    return select.value;
+}
+
+function displayFormMessage(form, message, isError = false) {
+    let output = form.querySelector(".form-message");
+
+    if (!output) {
+        output = document.createElement("p");
+        output.className = "form-message";
+        output.setAttribute("aria-live", "polite");
+        form.appendChild(output);
+    }
+
+    output.textContent = message;
+    output.style.color = isError ? "#b42318" : "#087443";
+}
+
+/* VOTER REGISTRATION FORM */
+document.getElementById("registrationForm")
+    ?.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const form = this;
+        const submitButton = form.querySelector('[type="submit"]');
+
+        const voter = {
+            name: document.getElementById("voterName").value.trim(),
+            subLocationId: document.getElementById("subLocationId").value.trim(),
+            locationId: document.getElementById("locationId").value.trim(),
+            divisionId: document.getElementById("divisionId").value.trim(),
+            districtId: document.getElementById("districtId").value.trim()
+        };
+
+        /*
+         * Do not submit or store national ID numbers unless there is a
+         * lawful, necessary reason and appropriate security is in place.
+         * This example intentionally excludes the national ID field.
+         */
+
+        if (Object.values(voter).some(value => !value)) {
+            displayFormMessage(form, "Complete all required fields.", true);
+            return;
+        }
+        if (!document.getElementById("registrationConsent")?.checked) {
+            displayFormMessage(form, "Please confirm consent before submitting.", true);
+            return;
+        }
+        voter.consent = true;
+
+        try {
+            if (submitButton) submitButton.disabled = true;
+
+            const result = await postToCentralDatabase(
+                "registerVoter",
+                voter
+            );
+
+            displayFormMessage(
+                form,
+                result.message || "Registration record submitted successfully."
+            );
+
+            form.reset();
+        } catch (error) {
+            displayFormMessage(form, error.message, true);
+        } finally {
+            if (submitButton) submitButton.disabled = false;
+        }
+    });
+
+/* INDEPENDENT OPINION POLL */
+document.getElementById("opinionPollForm")
+    ?.addEventListener("submit", async function(event) {
+        event.preventDefault();
+        const form = this;
+        const submitButton = form.querySelector('[type="submit"]');
+        if (!form.reportValidity()) return;
+        if (!document.getElementById("pollConsent")?.checked) {
+            displayFormMessage(form, "Please provide consent before submitting.", true);
+            return;
+        }
+        const requiredSeats = ["presidentialCandidate", "governorCandidate", "senatorCandidate", "mpCandidate", "womanRepCandidate", "mcaCandidate"];
+        for (const id of requiredSeats) {
+            if (!getCandidateChoice(id)) {
+                displayFormMessage(form, "Choose a candidate or use the manual option for every seat.", true);
+                document.getElementById(id)?.focus();
+                return;
+            }
+        }
+        const opinion = {
+            pollStation: document.getElementById("pollStation").value,
+            county: document.getElementById("pollCounty").value,
+            constituency: document.getElementById("pollConstituency").value,
+            presidentialCandidate: getCandidateChoice("presidentialCandidate"),
+            governorCandidate: getCandidateChoice("governorCandidate"),
+            senatorCandidate: getCandidateChoice("senatorCandidate"),
+            mpCandidate: getCandidateChoice("mpCandidate"),
+            womanRepCandidate: getCandidateChoice("womanRepCandidate"),
+            mcaCandidate: getCandidateChoice("mcaCandidate"),
+            reason: document.getElementById("pollReason").value.trim(),
+            consent: true,
+            submittedAt: new Date().toISOString()
+        };
+        try {
+            if (submitButton) { submitButton.disabled = true; submitButton.textContent = "Submitting…"; }
+            const result = await postToCentralDatabase("submitOpinionPoll", opinion);
+            displayFormMessage(form, result.message || "Opinion poll response submitted.");
+            if (result.localPending) {
+                displayFormMessage(form, "Saved on this device only. It is NOT yet in the central database. Connect to the internet and use Sync pending submissions.");
+            } else {
+                form.reset();
+                if (typeof populateConstituencies === "function") populateConstituencies();
+                if (typeof refreshCandidateLists === "function") refreshCandidateLists();
+                document.querySelectorAll(".candidate-manual").forEach(input => { input.hidden = true; input.required = false; input.value = ""; });
+            }
+        } catch (error) {
+            displayFormMessage(form, error.message || "Submission failed. Check your connection and try again.", true);
+        } finally {
+            if (submitButton) { submitButton.disabled = false; submitButton.textContent = "Submit Opinion"; }
+        }
+    });;
+</script>
+
+
+<script>
+
+/* Candidate directory snapshot: Baraza public aspirant directory, updated 28 Oct 2026.
+   These are reported aspirants, not IEBC-cleared nominees. Native <select> options cannot
+   reliably render images, so portraits appear in the adjacent preview cards. */
+const COUNTY_NAMES = ["Mombasa","Kwale","Kilifi","Tana River","Lamu","Taita-Taveta","Garissa","Wajir","Mandera","Marsabit","Isiolo","Meru","Tharaka-Nithi","Embu","Kitui","Machakos","Makueni","Nyandarua","Nyeri","Kirinyaga","Murang'a","Kiambu","Turkana","West Pokot","Samburu","Trans Nzoia","Uasin Gishu","Elgeyo-Marakwet","Nandi","Baringo","Laikipia","Nakuru","Narok","Kajiado","Kericho","Bomet","Kakamega","Vihiga","Bungoma","Busia","Siaya","Kisumu","Homa Bay","Migori","Kisii","Nyamira","Nairobi City"];
+const PRESIDENTIAL_ASPIRANTS = ["Bob Njagi","Boniface Mwangi","David Maraga","Edwin Sifuna","Ekuru Aukot","Eliud Owalo","Eugene Wamalwa","Fred Matiang'i","George Wajackoyah","James Orengo","Jimi Wanjigi","Kalonzo Musyoka","Macharia Njeru","Martha Karua","Miguna Miguna","Ndindi Nyoro","Okiya Omtatah","Peter Salasya","Reuben Kigame","Rigathi Gachagua","William Samoei Ruto"];
+const GOVERNOR_ASPIRANTS = [
+["Abdi Ibrahim Guyo","Isiolo"],["Abdiqani Dubat Fidow","Garissa"],["Abdul Haji","Garissa"],["Abdulswamad Nassir","Mombasa"],["Aduma Owuor","Kisumu"],["Agnes Kagure","Nairobi City"],["Ahmed Ibrahim Abass","Garissa"],["Ahmed Kolosh","Wajir"],["Aisha Jumwa","Kilifi"],["Alex Wachira","Nyeri"],["Ali Korane","Garissa"],["Ali Mbogo","Mombasa"],["Alice Ng'ang'a","Kiambu"],["Alice Wahome","Murang'a"],["Alinur Mohamed","Mandera"],["Amos Nyaribo","Nyamira"],["Anderson Mtalaki","Taita-Taveta"],["Arthur Osiya","Busia"],["Ayub Savula","Kakamega"],["Babu Owino","Nairobi City"],["Beatrice Adagala","Vihiga"],["Boni Khalwale","Kakamega"],["Brighton Yegon","Bomet"],["Cate Waruguru","Laikipia"],["Chachu Ganya","Marsabit"],["Chris Wamalwa","Trans Nzoia"],["Cleophas Malala","Kakamega"],["Danson Mwashako","Taita-Taveta"],["David Ochieng'","Siaya"],["David Pkosing","West Pokot"],["Didmus Barasa","Bungoma"],["Dido Rasso","Marsabit"],["Elsie Muhanda","Kakamega"],["Enoch Wambua","Kitui"],["Enock Ondari","Kisii"],["Esther Murugi","Nyeri"],["Evans Kidero","Homa Bay"],["Ezekiel Machogu","Kisii"],["Fatuma Dullo","Isiolo"],["Fernandes Barasa","Kakamega"],["Gabriel ole Tongoyo","Narok"],["Geoffrey Gitau Mwangi","Nakuru"],["Geoffrey Mosiria","Nairobi City"],["George Aladwa","Nairobi City"],["George Gitonga Murugara","Tharaka-Nithi"],["Gideon Mung'aro","Kilifi"],["Gideon Nyandiricha","Kisii"],["Gladys Wanga","Homa Bay"],["Godfrey Osotsi","Vihiga"],["Granton Samboja","Taita-Taveta"],["Hajir Dahiye","Garissa"],["Hamadi Boga","Kwale"],["Hassan Mohamed Adam","Wajir"],["Hassan Omar","Mombasa"],["Ibrahim Said","Marsabit"],["Irene Kasalu","Kitui"],["Irungu Kang'ata","Murang'a"],["Irungu Nyakera","Nairobi City"],["Jackson Kiptanui Kamai","Elgeyo-Marakwet"],["James Gakuya","Nairobi City"],["John Ariko Namoit","Turkana"],["John Gitonga Mukunji","Embu"],["John Lonyang'apuo","West Pokot"],["John Mwangemi","Taita-Taveta"],["Johnson Sakaja","Nairobi City"],["Jones Mwaruma","Taita-Taveta"],["Joseph Oyugi Magwanga","Homa Bay"],["Joshua Oron","Kisumu"],["Julius Melly","Nandi"],["Kahi Indimuli","Vihiga"],["Kareke Mbiuki","Tharaka-Nithi"],["Kazungu Kambi","Kilifi"],["Ken Obura","Kisumu"],["Kimani Wamatangi","Kiambu"],["Kinoti Marete","Meru"],["Lee Kinyanjui","Nakuru"],["Lentoijoni Jackson Lekumontare","Samburu"],["Lung'anzi Chai","Kwale"],["Makali Mulu","Kitui"],["Margaret Mwakima","Taita-Taveta"],["Margaret Wanjiru","Nairobi City"],["Martin Moshosho","Kajiado"],["Mathews Owili","Kisumu"],["Maurice Bisau","Trans Nzoia"],["Maurice Wambua Kidero","Makueni"],["Mbarak Mohamed Salim","Lamu"],["Mohamed Abdi Samad","Garissa"],["Mohamed Liban","Isiolo"],["Mohamed Roba Qoto","Isiolo"],["Mohamed Shidiye","Garissa"],["Mohammed Ali","Mombasa"],["Moitalel ole Kenta","Narok"],["Moses Badilisha","Nyandarua"],["Moulid Shuriye","Garissa"],["Mutula Kilonzo Jr","Makueni"],["Mwangi Kiunjuri","Laikipia"],["Naisula Lesuuda","Samburu"],["Naomi Jillo","Marsabit"],["Ndiritu Muriithi","Laikipia"],["Nicholas Gumbo","Siaya"],["Omboko Milemba","Vihiga"],["Patrick Makau","Machakos"],["Patrick ole Ntutu","Narok"],["Paul Ekwom Nabuin","Turkana"],["Peter Shake","Taita-Taveta"],["Philip Kaloki","Makueni"],["Purity Ngirici","Kirinyaga"],["Richard Githatu","Nakuru"],["Richard Momoima Onyonka","Kisii"],["Ronald Karauri","Nairobi City"],["Rozaah Buyu","Kisumu"],["Ruth Odinga","Kisumu"],["Samuel Poghisio","West Pokot"],["Sicily Kariuki","Nyandarua"],["Simba Arati","Kisii"],["Stephen Mwakesi","Taita-Taveta"],["Suleiman Shahbal","Mombasa"],["Susan Kihika","Nakuru"],["Susan Nakhumicha","Trans Nzoia"],["Tabitha Karanja","Nakuru"],["Thuo Mathenge","Nyeri"],["Tim Wanyonyi","Bungoma"],["Tom Ojienda","Kisumu"],["Tony Gachoka","Nairobi City"],["Vincent Sidai Esyepet","Busia"],["Walter Nyambati","Nyamira"],["Wavinya Ndeti","Machakos"],["William Kabogo","Kiambu"],["William Oduol","Siaya"]];
+const SENATOR_ASPIRANTS = [["Andrew Gitau","Murang'a"],["Cecil Miller","Nairobi City"],["Christopher Kimanthi Ireri","Embu"],["David Gikaria","Nakuru"],["Elvis Ongwae","Kisii"],["Gideon Kipngetich","Narok"],["Godwin Kilele","Taita-Taveta"],["Hassan Dukicha","Tana River"],["Isrom Babu Nyangau","Kisii"],["Jimmy Parnyumbe","Narok"],["John Marete","Tharaka-Nithi"],["John Reson Saruni","Narok"],["Jonah Kipkorir Tanui","Elgeyo-Marakwet"],["Joseph Ole Lenku","Kajiado"],["Kabando wa Kabando","Nyeri"],["Kaleku Mukare","Narok"],["Ken Babu","Nairobi City"],["Kimani Ngunjiri","Nakuru"],["Kipkoech Bernhard Ng'etich","Kericho"],["Ledama Ole Kina","Narok"],["Lydia Haika","Taita-Taveta"],["Mathias Mesau","Makueni"],["Morris Maugu","Tharaka-Nithi"],["Moses Kiprop Kosgei","Elgeyo-Marakwet"],["Mugambi Imanyara","Meru"],["Murgor Kipkoech Brian","Nandi"],["Mutahi Kahiga","Nyeri"],["Muthomi Njuki","Tharaka-Nithi"],["Mwenda Ithili","Meru"],["Nathif Jama","Garissa"],["Njeru Ing'ara","Tharaka-Nithi"],["Oburu Oginga","Siaya"],["Okong'o Omogeni","Nyamira"],["Onyancha Rogers","Kisii"],["Phelix Odiwuor Khodhe","Nairobi City"],["Reuben Ndolo","Nairobi City"],["Samora Machel K'alosi","Homa Bay"],["Samuel Kuntai Ole Tunai","Narok"],["Samuel Mbae Ragwa","Tharaka-Nithi"],["Sarah Mwangi","Kirinyaga"],["Stanley Muntet","Narok"],["William Karuga Kimani (KRG The Don)","Nairobi City"],["Willis Raburu","Kisumu"],["Winnie Odinga","Nairobi City"]];
+const WOMANREP_ASPIRANTS = [["Alice Chae","Nyamira"],["Bavina Serem","Kericho"],["Beatrice Amondi","Kisumu"],["Beulah Muthoni","Murang'a"],["Caroline Murei","Trans Nzoia"],["Corazon Kwamboka","Nairobi City"],["Emily Nyagarama","Nyamira"],["Esther Passaris","Nairobi City"],["Evalyne Korir","Baringo"],["Faith Nguthu","Nairobi City"],["Faith Odhiambo","Nairobi City"],["Fatuma Mohammed","Migori"],["Felicity Biriri","Meru"],["Hanifa Adan (Hanifa Farsafi)","Nairobi City"],["Irene Ndanu","Machakos"],["Jane Matara","Nyamira"],["Jane Mengich","West Pokot"],["Jane Vila","Migori"],["Janet Komenda","Nyamira"],["Jemutai (Stella Bunie Koitie)","Elgeyo-Marakwet"],["Karen Nyamu","Nairobi City"],["Lily Ng'ok Kirui","Kericho"],["Liz Mbugua","Murang'a"],["Margaret Sabina Wanjala","Trans Nzoia"],["Mary Migiro","Nyamira"],["Maverick Aoko (Sophie Aoko Otieno)","Nairobi City"],["Mercy Nashipai Legilisho","Kajiado"],["Mercy Nungari","Kiambu"],["Millicent Omanga","Nairobi City"],["Millicent Too","Kericho"],["Monica Williams","Migori"],["Muthoni Marubu","Lamu"],["Naomi Kagone","Murang'a"],["Novince Karalia Atieno","Nairobi City"],["Patricia Kagendo","Tharaka-Nithi"],["Rose Museo Mumo","Makueni"],["Saumu Mbuvi","Nairobi City"],["Sheila Owigo Olang","Migori"],["Susan Ngugi","Tharaka-Nithi"],["Tabitha Mutinda","Nairobi City"],["Umulkheir Harun Mohamed","Garissa"],["Vicky Chepkorir","Kericho"],["Zamzam Mohamed","Mombasa"]];
+const MP_ASPIRANTS = [
+["Bernard Aete","Kisumu","Kisumu Central"],["Bernard Kitur","Nandi","Nandi Hills"],["Bernard Kosgei","Nandi","Mosop"],["Bernard Wambwa","Trans Nzoia","Saboti"],["Betty Birchogo","Baringo","Baringo Central"],["Bishar Hussein","Mandera","Mandera North"],["Boniface Githinji Ndumia","Nakuru","Nakuru Town East"],["Boniface Mutisya Musambi","Kitui","Kitui Central"],["Bovince Ochieng","Kisumu","Kisumu Central"],["Brian Nyamweya Gori","Kisii","Nyaribari Chache"],["Bright Shitemi","Nairobi City","Dagoretti North"],["Bryan Khaemba","Bungoma","Kimilili"],["Caleb Amisi","Trans Nzoia","Saboti"],["Caleb Mule","Machakos","Machakos Town"],["Calvin Gaucho","Nairobi City","Embakasi East"],["Carol Muriuki","Meru","North Imenti"],["Cedric Otieno","Kisumu","Kisumu Central"],["Charity Kathambi Chepkwony","Nakuru","Njoro"],["Charles Iranji","Laikipia","Laikipia East"],["Charles Nguna","Kitui","Mwingi West"],["Charles Onchoke","Kisii","Bonchari"],["Charo Kenneth Kazungu Tungule","Kilifi","Ganze"],["Christopher Nzilu Nzioka","Kitui","Kitui Central"],["Cliff Ombeta","Kisii","Bonchari"],["Clive Ombane Gisairo","Nyamira","Kitutu Masaba"],["Collins Ayugu","Vihiga","Hamisi"],["Collins Bartoo","Baringo","Baringo Central"],["Francis Murimi","Kirinyaga","Ndia"],["Francis Wambua Kavyu","Machakos","Mavoko"],["Frank Murgor","Uasin Gishu","Kapseret"],["Frankline Moranga","Homa Bay","Kasipul"],["Fred Muga","Meru","Tigania West"],["Fred Muteti","Makueni","Makueni"],["Fred Ouda","Kisumu","Kisumu Central"],["Fredrick Kimanga","Kitui","Kitui West"],["Fredrick Oduor Omondi","Siaya","Alego Usonga"],["Geoffrey Kamau","Nakuru","Nakuru Town East"],["Geoffrey Ngari Mathu","Nyeri","Tetu"],["George Gachagua","Nyandarua","Ndaragwa"],["George Kazungu","Kwale","Kinango"],["George Koimburi","Kiambu","Juja"],["George Lanyasunya","Samburu","Samburu West"],["George Mbugua Geodom","Nyandarua","Ol Jorok"],["George Ruto","Uasin Gishu","Turbo"],["George Sunkuyia","Kajiado","Kajiado West"],["Gideon Ochanda","Siaya","Bondo"],["Gideon Saruni","Kajiado","Kajiado West"],["Gilbert Kiptanui","Nandi","Aldai"],["Gillian Soi","Bomet","Sotik"],["Gitau Njamba","Nyandarua","Ndaragwa"],["Gladys Chepkorir","Mombasa","Nyali"],["Rashid Kotote","Nairobi City","Embakasi East"],["Ricardo Nyantika","Nairobi City","Embakasi East"],["Richard Ken Chonga Kiti","Kilifi","Kilifi South"],["Richard Malela Odare","Homa Bay","Homa Bay Town"],["Rindikiri Mugambi Murwithania","Meru","Buuri"],["Rishad Amana","Lamu","Lamu West"],["Robert Alai","Nairobi City","Dagoretti North"],["Robert Chepkwony","Nandi","Nandi Hills"],["Robert Gichimu Githinji","Kirinyaga","Gichugu"],["Robert Kipchirchir Limoh","Nandi","Aldai"],["Robert Lemerketo","Samburu","Samburu East"],["Robert Mairura","Kisii","South Mugirango"],["Robert Pukose","Trans Nzoia","Endebess"],["Rodgers Kiptanui","Elgeyo-Marakwet","Keiyo North"],["Ruth Bendera","Kilifi","Kilifi North"],["Ruweida Mohamed Obo","Lamu","Lamu East"],["Said Abdala","Mombasa","Nyali"],["Sakimba Parashina","Kajiado","Kajiado South"],["Salim Swaleh","Nakuru","Gilgil"],["Samuel Arama","Nakuru","Nakuru Town West"],["Samuel Atandi","Siaya","Alego Usonga"],["Samuel Chepkonga","Uasin Gishu","Ainabkoi"],["Samuel Gonzi Rai","Kwale","Kinango"],["Samuel Kutata","Kajiado","Kajiado South"],["Samuel Moroto","West Pokot","Kapenguria"],["Samuel Mwangi","Laikipia","Laikipia West"],["Sarolyne Wanjiku","Laikipia","Laikipia West"],["Seth Kamanza Mwatela","Kwale","Kinango"],["Shadrack Mwiti Ithinji","Meru","South Imenti"],["Silvanus Osoro","Kisii","South Mugirango"],["Solomon Maina","Nyeri","Mathira"],["Sophie Kadzo Kombe","Kilifi","Kilifi South"],["Stazo Elijah Omung'ala","Nairobi City","Embakasi East"],["Stella Opore","Kisii","Bonchari"],["Stephen Edukon","Turkana","Loima"],["Stephen Gatei","Kirinyaga","Kirinyaga Central"],["Stephen Kilonzo","Kitui","Kitui Central"],["Stephen Letoo","Narok","Kilgoris"],["Stephen Sang","Nandi","Aldai"],["Steve Mogaka","Nyamira","West Mugirango"],["Sudi Kennedy Makokha","Bungoma","Bumula"],["Suleiman Habashow","Wajir","Wajir East"],["Suzanne Kiamba","Makueni","Makueni"],["Sylvia Metto","Uasin Gishu","Kapseret"],["Teddy Mwambire","Kilifi","Ganze"],["Thomas Kimari","Kiambu","Kiambu"],["Thomas Maiyo","Elgeyo-Marakwet","Keiyo North"],["Tina Ogal","Nairobi City","Embakasi East"],["Tom Odege","Migori","Nyatike"],["Tony Karimi","Kirinyaga","Kirinyaga Central"],["Trevor Ombija","Kisumu","Nyakach"],["Victor Kanyari","Nairobi City","Kasarani"],["Victor Munyaka","Machakos","Machakos Town"],["Vincent Korir","Nandi","Nandi Hills"],["Vincent Ombaka","Nairobi City","Dagoretti North"],["Wachira Karani","Laikipia","Laikipia West"],["Wahome Thuku","Nyeri","Othaya"],["Walter Waithaka Wairimu","Laikipia","Laikipia West"],["Wanyaga Gathaka","Nyeri","Nyeri Town"],["Wesley Kiprotich","Bomet","Konoin"],["Willy Korir","Uasin Gishu","Turbo"],["Wilson Mwangi","Nakuru","Nakuru Town East"],["Wilson Sang","Nandi","Emgwen"],["Wilson Somoire","Kajiado","Kajiado South"],["Yaqub Adow","Tana River","Bura"],["Yusuf Mohamed Farah","Wajir","Wajir West"],["Zaheer Jhanda","Kisii","Nyaribari Chache"],["Zamza Ismaili","Isiolo","Isiolo North"]];
+const CONSTITUENCIES = {
+"Nairobi City":["Westlands","Dagoretti North","Dagoretti South","Lang'ata","Kibra","Roysambu","Kasarani","Ruaraka","Embakasi South","Embakasi North","Embakasi Central","Embakasi East","Makadara","Kamukunji","Starehe","Mathare"],
+"Nakuru":["Molo","Njoro","Naivasha","Gilgil","Kuresoi South","Kuresoi North","Subukia","Rongai","Bahati","Nakuru Town West","Nakuru Town East"],
+"Machakos":["Masinga","Yatta","Kangundo","Matungulu","Kathiani","Mavoko","Machakos Town","Mwala"],
+"Kiambu":["Gatundu South","Gatundu North","Juja","Thika Town","Ruiru","Githunguri","Kiambu","Kiambaa","Kabete","Kikuyu","Limuru","Lari"],
+"Uasin Gishu":["Soy","Turbo","Moiben","Ainabkoi","Kapseret","Kesses"],
+"Laikipia":["Laikipia East","Laikipia West","Laikipia North"],
+"Kisumu":["Kisumu East","Kisumu West","Kisumu Central","Seme","Nyando","Muhoroni","Nyakach"],
+"Kisii":["Kitutu Chache North","Kitutu Chache South","Nyaribari Masaba","Nyaribari Chache","Bomachoge Borabu","Bomachoge Chache","Bobasi","South Mugirango","Bonchari","Kitutu Masaba"],
+"Bungoma":["Bumula","Kanduyi","Webuye East","Webuye West","Kimilili","Tongaren","Sirisia","Kabuchai","Mt Elgon"],
+"Trans Nzoia":["Kiminini","Saboti","Endebess","Cherangany","Kwanza"],
+"Nandi":["Tinderet","Aldai","Nandi Hills","Emgwen","Mosop","Chesumei"],
+"Mombasa":["Changamwe","Jomvu","Kisauni","Nyali","Likoni","Mvita"],
+"Kilifi":["Kilifi North","Kilifi South","Kaloleni","Rabai","Ganze","Malindi","Magarini"],
+"Kwale":["Msambweni","Lungalunga","Matuga","Kinango"],
+"Taita-Taveta":["Taveta","Wundanyi","Mwatate","Voi"],
+"Garissa":["Garissa Township","Balambala","Lagdera","Dadaab","Fafi","Ijara"],
+"Wajir":["Wajir North","Wajir East","Tarbaj","Wajir West","Eldas","Wajir South"],
+"Mandera":["Mandera West","Banissa","Mandera North","Mandera South","Mandera East","Lafey"],
+"Marsabit":["Moyale","North Horr","Saku","Laisamis"],
+"Isiolo":["Isiolo North","Isiolo South"],
+"Meru":["Igembe South","Igembe Central","Igembe North","Tigania West","Tigania East","North Imenti","Buuri","Central Imenti","South Imenti","Maara"],
+"Embu":["Manyatta","Runyenjes","Mbeere South","Mbeere North"],
+"Kitui":["Mwingi North","Mwingi West","Mwingi Central","Kitui West","Kitui Rural","Kitui Central","Kitui East","Kitui South"],
+"Makueni":["Mbooni","Kilome","Kaiti","Makueni","Kibwezi West","Kibwezi East"],
+"Nyeri":["Tetu","Kieni","Mathira","Othaya","Mukurweini","Nyeri Town"],
+"Kirinyaga":["Mwea","Gichugu","Ndia","Kirinyaga Central"],
+"Murang'a":["Kandara","Gatanga","Kigumo","Maragwa","Kiharu","Kangema","Mathioya"],
+"Nyandarua":["Kinangop","Kipipiri","Ol Jorok","Ndaragwa","Ol Kalou"],
+"Kericho":["Kipkelion East","Kipkelion West","Ainamoi","Bureti","Belgut","Sigowet-Soin"],
+"Bomet":["Sotik","Chepalungu","Bomet East","Bomet Central","Konoin"],
+"Kakamega":["Lugari","Likuyani","Malava","Lurambi","Navakholo","Mumias West","Mumias East","Matungu","Butere","Khwisero","Shinyalu","Ikolomani"],
+"Vihiga":["Vihiga","Sabatia","Hamisi","Luanda","Emuhaya"],
+"Busia":["Teso North","Teso South","Nambale","Matayos","Butula","Funyula","Budalangi"],
+"Siaya":["Ugenya","Ugunja","Alego Usonga","Gem","Bondo","Rarieda"],
+"Homa Bay":["Kasipul","Kabondo Kasipul","Karachuonyo","Rangwe","Homa Bay Town","Ndhiwa","Mbita","Suba North","Suba South"],
+"Migori":["Rongo","Awendo","Suna East","Suna West","Uriri","Nyatike","Kuria West","Kuria East"],
+"Nyamira":["Kitutu Masaba","West Mugirango","North Mugirango","Borabu"],
+"Baringo":["Mogotio","Eldama Ravine","Baringo Central","Baringo North","Baringo South","Tiaty"],
+"Elgeyo-Marakwet":["Marakwet East","Marakwet West","Keiyo North","Keiyo South"],
+"West Pokot":["Kapenguria","Sigor","Kacheliba","Pokot South"],
+"Turkana":["Turkana North","Turkana West","Turkana Central","Loima","Turkana South","Turkana East"],
+"Samburu":["Samburu West","Samburu North","Samburu East"],
+"Kajiado":["Kajiado North","Kajiado Central","Kajiado East","Kajiado West","Kajiado South"],
+"Narok":["Kilgoris","Emurua Dikirr","Narok North","Narok East","Narok South","Narok West"],
+"Tana River":["Garsen","Galole","Bura"],
+"Lamu":["Lamu East","Lamu West"],
+"Tharaka-Nithi":["Maara","Chuka/Igambang'ombe","Tharaka"]
+};
+const WARDS_BY_COUNTY = {"Nairobi City":["Dagoretti North","Embakasi East","Kasarani","Westlands"],"Uasin Gishu":["Kapseret","Turbo","Ainabkoi","Kesses"],"Laikipia":["Laikipia East","Laikipia West","Nanyuki"],"Nakuru":["Nakuru Town East","Gilgil","Njoro"],"Machakos":["Mavoko","Machakos Central","Yatta"]};
+const HISTORICAL_2022 = ["William Samoei Ruto — 7,176,141 votes (50.49%), declared winner","Raila Amolo Odinga — 6,942,930 votes (48.85%)","George Luchiri Wajackoyah — historical 2022 candidate","David Mwaure Waihiga — historical 2022 candidate"];
+function option(select, value, text, groupLabel) { const o=document.createElement('option'); o.value=value; o.textContent=text; if(groupLabel) o.dataset.group=groupLabel; select.appendChild(o); }
+function fillSelect(select, prompt, items, extra=true) { if(!select) return; select.replaceChildren(); option(select,"",prompt); (items||[]).forEach(item=>{const name=Array.isArray(item)?item[0]:item; option(select,name,name);}); if(extra) option(select,"OTHER — manually recorded","Other / name not listed"); }
+function populateConstituencies() {
+ const county=document.getElementById('pollCounty')?.value||'';
+ const con=document.getElementById('pollConstituency');
+ if(!con)return;
+ con.replaceChildren(); option(con,"","Select constituency");
+ (CONSTITUENCIES[county]||[]).forEach(c=>option(con,c,c));
+ if(county&&!CONSTITUENCIES[county]) option(con,"OTHER — manually recorded","Constituency list not loaded — use manual candidate option");
+}
+function refreshCandidateLists() {
+ const county=document.getElementById('pollCounty')?.value||'';
+ const constituency=document.getElementById('pollConstituency')?.value||'';
+ const station=document.getElementById('pollStation');
+ const gov=GOVERNOR_ASPIRANTS.filter(x=>x[1]===county).map(x=>x[0]);
+ const sen=SENATOR_ASPIRANTS.filter(x=>x[1]===county).map(x=>x[0]);
+ const wr=WOMANREP_ASPIRANTS.filter(x=>x[1]===county).map(x=>x[0]);
+ const mp=MP_ASPIRANTS.filter(x=>x[1]===county && (!constituency || x[2]===constituency)).map(x=>x[0]);
+ fillSelect(document.getElementById('governorCandidate'),'Select reported governor aspirant',gov);
+ fillSelect(document.getElementById('senatorCandidate'),'Select reported senator aspirant',sen);
+ fillSelect(document.getElementById('womanRepCandidate'),'Select reported woman-representative aspirant',wr);
+ fillSelect(document.getElementById('mpCandidate'),constituency?'Select reported MP aspirant':'Choose constituency first',mp);
+ fillSelect(document.getElementById('mcaCandidate'),'Select reported MCA aspirant (coverage limited)',[]);
+ ['presidentialCandidate','governorCandidate','senatorCandidate','mpCandidate','womanRepCandidate','mcaCandidate'].forEach(id=>{const select=document.getElementById(id);const manual=document.getElementById(id+'Manual');if(select&&manual){manual.hidden=true;manual.required=false;manual.value='';}});
+ if(station){station.replaceChildren();option(station,"",county?"Select constituency / county-level option":"Select county first");if(county){const cs=CONSTITUENCIES[county]||[];if(cs.length)cs.forEach(c=>option(station,county+" · "+c,county+" · "+c));else option(station,county,county+" · county-wide opinion");}}
+}
+(function initCandidateUI(){
+ const county=document.getElementById('pollCounty');
+ if(county){county.replaceChildren();option(county,"","Select county");COUNTY_NAMES.forEach(c=>option(county,c,c));county.addEventListener('change',()=>{populateConstituencies();refreshCandidateLists();});}
+ const con=document.getElementById('pollConstituency'); if(con) con.addEventListener('change',refreshCandidateLists);
+ const pres=document.getElementById('presidentialCandidate');
+ fillSelect(pres,'Choose reported 2027 presidential aspirant',PRESIDENTIAL_ASPIRANTS);
+ ['presidentialCandidate','governorCandidate','senatorCandidate','mpCandidate','womanRepCandidate','mcaCandidate'].forEach(id=>{const select=document.getElementById(id);const manual=document.getElementById(id+'Manual');if(select&&manual){select.addEventListener('change',()=>{const isOther=select.value.startsWith('OTHER');manual.hidden=!isOther;manual.required=isOther;if(!isOther)manual.value='';});}});
+ const previews=[['presidentialCandidate','presidentialPreview'],['governorCandidate','governorPreview'],['senatorCandidate','senatorPreview'],['mpCandidate','mpPreview'],['womanRepCandidate','womanRepPreview'],['mcaCandidate','mcaPreview']];
+ previews.forEach(([sid,pid])=>{const select=document.getElementById(sid),card=document.getElementById(pid);if(!select||!card)return;select.addEventListener('change',async()=>{const name=getCandidateChoice(sid)||select.options[select.selectedIndex]?.textContent||'Candidate';const avatar=card.querySelector('.candidate-avatar');const title=card.querySelector('strong');const small=card.querySelector('small');if(!avatar||!title||!small)return;avatar.textContent=name.split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';title.textContent=name;small.textContent=(select.value.includes('historical')||name.includes('votes ('))?'Historical 2022 presidential result.':'Reported aspirant listing; not an IEBC-cleared nomination.';if(!name||name.startsWith('Choose')||name.startsWith('Select')||name.startsWith('Other'))return;try{const resp=await fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(name.split(' — ')[0].replace(/\s*\(.+\)$/,'')));if(!resp.ok)return;const data=await resp.json();if(data.thumbnail&&data.thumbnail.source){const img=document.createElement('img');img.src=data.thumbnail.source;img.alt='Portrait of '+name;img.loading='lazy';img.referrerPolicy='no-referrer';avatar.replaceChildren(img);small.textContent=(data.description||'Public biography image')+' · candidate status remains unverified';}}catch(_){/* Initials remain as a no-data fallback. */}});});
+ populateConstituencies(); refreshCandidateLists();
+})();;;
+
+</script>
+</body></html>

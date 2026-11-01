@@ -1,0 +1,460 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8">
+<title>Form 34A Verification Simulator</title>
+
+<style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            background: #f1f8f3;
+        }
+        header {
+            background: linear-gradient(120deg, #071b10 0%, #008640 55%, #00a651 100%);
+            color: #fff;
+            padding: 15px 20px;
+            box-shadow: 0 4px 18px rgba(0, 166, 81, 0.25);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+        nav {
+            background: linear-gradient(90deg, #101510, #17251b, #008640);
+            display: flex;
+            gap: 15px;
+            padding: 10px 20px;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        nav a:hover {
+            color: #69f0a3;
+            text-decoration: underline;
+            text-shadow: 0 0 8px rgba(105, 240, 163, 0.5);
+        }
+        main {
+            padding: 20px;
+        }
+        section {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 100, 45, 0.10);
+            border-top: 3px solid #00a651;
+        }
+        h2 {
+            margin-top: 0;
+            color: #008640;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input, select, textarea, button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #b9d8c3;
+        }
+        button {
+            background: linear-gradient(120deg, #008640, #00a651);
+            color: #fff;
+            border: none;
+            margin-top: 15px;
+            cursor: pointer;
+            box-shadow: 0 3px 12px rgba(0, 166, 81, 0.20);
+        }
+        button:hover {
+            background: linear-gradient(120deg, #006b32, #008640);
+            box-shadow: 0 0 14px rgba(0, 166, 81, 0.35);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        table th, table td {
+            border: 1px solid #c8dfcf;
+            padding: 8px;
+            text-align: left;
+        }
+        table th {
+            background: linear-gradient(90deg, #d9f3e2, #effaf2);
+            color: #07552d;
+        }
+        footer {
+            background: linear-gradient(100deg, #101510, #17251b, #008640);
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            font-size: 13px;
+        }
+        .error {
+            color: #c62828;
+            font-weight: bold;
+        }
+        .success {
+            color: #008640;
+            font-weight: bold;
+        }
+    </style>
+
+   
+</head>
+<body>
+<div class="header">
+    
+    <img class="logo" src="https://www.iebc.or.ke/images/iebclogo1.png">
+</div>
+<h2>🗳️ Form 34A Verification Simulator</h2>
+
+<div class="section">
+    
+    <label for="locationName">Polling Station Name</label>
+<input id="locationName" type="text" placeholder="Enter official polling station name"><br>
+    <label for="locationId">Unique Polling Station ID</label><input id="locationId" type="text" placeholder="e.g. KE-COUNTY-CONSTITUENCY-WARD-001" required=""><br>
+<label for="electionId">Election ID</label>
+<input id="electionId" type="text" placeholder="e.g. COUNTY-2026" required="">
+</div>
+
+<div class="section">
+    <h3>Registered Voters</h3>
+    <input type="number" id="registered" placeholder="Registered Voters">
+</div>
+
+<div class="section">
+    <h3>Votes Cast</h3>
+    Total Votes Cast: <input type="number" id="cast"><br>
+    Valid Votes: <input type="number" id="valid"><br>
+    Rejected Ballots: <input type="number" id="rejected">
+</div>
+
+<div class="section">
+    <h3>Candidate Votes</h3>
+    Candidate A: <input type="number" class="candidate"><br>
+    Candidate B: <input type="number" class="candidate"><br>
+    Candidate C: <input type="number" class="candidate"><br>
+</div>
+
+<div class="section">
+    
+    <p id="result" class="success">No duplicate found. This location can be submitted as a new record.</p>
+</div>
+
+
+
+
+
+
+
+
+<button type="button" onclick="verify()">Verify Vote Totals</button>
+<button type="button" onclick="fetchSavedData()">Fetch Saved Results</button>
+<button type="button" onclick="checkDuplicate()">Check Duplicate</button>
+<button type="button" onclick="postData()">Save New Results</button>
+<button type="button" onclick="overwriteData()">Authorized Overwrite</button>
+
+<div id="result" aria-live="polite"></div>
+
+
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbx7ZtogE6YPh27eNqKixsBPzxOj7bh1RqSA5VJSaHXOBBYZbZnpwoGEJt3sFoh1DjG-/exec";
+
+/* Read a number safely from an existing form field */
+function getNumber(id) {
+    return Math.max(0, parseInt(document.getElementById(id)?.value, 10) || 0);
+}
+
+/* Collect the current form data */
+function collectData() {
+    const candidates = {};
+
+    document.querySelectorAll(".candidate").forEach((field, index) => {
+        const name =
+            field.dataset.candidate ||
+            field.name ||
+            field.id ||
+            `candidate_${index + 1}`;
+
+        candidates[name] = getFieldNumber(field);
+    });
+
+    return {
+        electionId: document.getElementById("electionId")?.value.trim() || "",
+        locationId: document.getElementById("locationId")?.value.trim() || "",
+        locationName: document.getElementById("locationName")?.value.trim() || "",
+        registered: getNumber("registered"),
+        cast: getNumber("cast"),
+        valid: getNumber("valid"),
+        rejected: getNumber("rejected"),
+        candidates: candidates,
+        updatedAt: new Date().toISOString()
+    };
+}
+
+function getFieldNumber(field) {
+    return Math.max(0, parseInt(field.value, 10) || 0);
+}
+
+/* Show feedback using the existing result element */
+function showResult(message, type = "error") {
+    const result = document.getElementById("result");
+    if (!result) {
+        alert(message.replace(/<br\s*\/?>/gi, "\n"));
+        return;
+    }
+
+    result.textContent = message.replace(/<br\s*\/?>/gi, "\n");
+    result.className = type;
+}
+
+/* Validate vote totals before fetching or saving */
+function verify() {
+    const data = collectData();
+    const errors = [];
+
+    if (data.registered < 0 || data.cast < 0 ||
+        data.valid < 0 || data.rejected < 0) {
+        errors.push("Vote totals cannot be negative.");
+    }
+
+    if (!data.electionId) {
+        errors.push("Enter the election ID.");
+    }
+
+    if (!data.locationId) {
+        errors.push("Enter the unique polling-station/location ID.");
+    }
+
+    if (data.cast > data.registered) {
+        errors.push("Votes cast exceed registered voters.");
+    }
+
+    if (data.valid + data.rejected !== data.cast) {
+        errors.push("Valid votes + rejected votes must equal votes cast.");
+    }
+
+    const candidateTotal = Object.values(data.candidates)
+        .reduce((sum, votes) => sum + votes, 0);
+
+    if (candidateTotal !== data.valid) {
+        errors.push("Candidate votes must equal valid votes.");
+    }
+
+    if (errors.length) {
+        showResult(errors.join("\n"), "error");
+        return false;
+    }
+
+    showResult("Form is valid. All vote checks passed.", "success");
+    return true;
+}
+
+/* Call the backend API */
+async function apiRequest(action, payload = null, method = "GET") {
+    if (!API_URL || API_URL.includes("YOUR_APPS_SCRIPT")) {
+        throw new Error("Configure API_URL with your deployed backend URL.");
+    }
+
+    let url = API_URL;
+    const options = { method };
+
+    if (method === "GET") {
+        const params = new URLSearchParams({ action, ...(payload || {}) });
+        url += (url.includes("?") ? "&" : "?") + params.toString();
+    } else {
+        options.headers = {
+            "Content-Type": "text/plain;charset=utf-8"
+        };
+        options.body = JSON.stringify({
+            action,
+            ...(payload || {})
+        });
+    }
+
+    const response = await fetch(url, options);
+
+    if (!response.ok) {
+        throw new Error(`Server returned HTTP ${response.status}.`);
+    }
+
+    const data = await response.json();
+
+    if (data.success === false) {
+        throw new Error(data.message || "The server rejected the request.");
+    }
+
+    return data;
+}
+
+/* Fetch saved results for one election and one location */
+async function fetchSavedData() {
+    const electionId = document.getElementById("electionId")?.value.trim();
+    const locationId = document.getElementById("locationId")?.value.trim();
+
+    if (!electionId || !locationId) {
+        showResult("Enter the election ID and location ID first.", "error");
+        return;
+    }
+
+    try {
+        showResult("Fetching saved results...", "success");
+
+        const response = await apiRequest("get", {
+            electionId,
+            locationId
+        });
+
+        if (!response.found || !response.record) {
+            showResult("No saved record exists for this election and location.", "error");
+            return;
+        }
+
+        const record = response.record;
+
+        ["registered", "cast", "valid", "rejected"].forEach(id => {
+            const field = document.getElementById(id);
+            if (field && record[id] !== undefined) {
+                field.value = record[id];
+            }
+        });
+
+        if (record.locationName && document.getElementById("locationName")) {
+            document.getElementById("locationName").value = record.locationName;
+        }
+
+        const savedCandidates = record.candidates || {};
+        document.querySelectorAll(".candidate").forEach((field, index) => {
+            const name =
+                field.dataset.candidate ||
+                field.name ||
+                field.id ||
+                `candidate_${index + 1}`;
+
+            if (savedCandidates[name] !== undefined) {
+                field.value = savedCandidates[name];
+            }
+        });
+
+        showResult("Saved record loaded successfully.", "success");
+    } catch (error) {
+        showResult("Fetch failed: " + error.message, "error");
+    }
+}
+
+/* Check whether a record already exists before saving */
+async function checkDuplicate() {
+    const data = collectData();
+
+    if (!data.electionId || !data.locationId) {
+        showResult("Enter the election ID and unique location ID first.", "error");
+        return null;
+    }
+
+    try {
+        const response = await apiRequest("checkDuplicate", {
+            electionId: data.electionId,
+            locationId: data.locationId
+        });
+
+        if (response.duplicate) {
+            showResult(
+                "Duplicate detected: a record already exists for this election and location. Use the protected overwrite option if authorized.",
+                "error"
+            );
+        } else {
+            showResult("No duplicate found. This location can be submitted as a new record.", "success");
+        }
+
+        return response.duplicate === true;
+    } catch (error) {
+        showResult("Duplicate check failed: " + error.message, "error");
+        return null;
+    }
+}
+
+/* Save a new record, refusing to overwrite an existing record */
+async function postData() {
+    if (!verify()) return;
+
+    const data = collectData();
+
+    try {
+        showResult("Checking for duplicates...", "success");
+
+        const duplicate = await checkDuplicate();
+
+        // Do not save if the duplicate check failed or a record exists.
+        if (duplicate === null || duplicate === true) return;
+
+        const response = await apiRequest("save", data, "POST");
+
+        showResult(
+            response.message || "Results saved successfully.",
+            "success"
+        );
+    } catch (error) {
+        showResult("Save failed: " + error.message, "error");
+    }
+}
+
+/* Password-protected overwrite request */
+async function overwriteData() {
+    if (!verify()) return;
+
+    const data = collectData();
+
+    const confirmed = confirm(
+        "WARNING: This will replace the saved results for this election and location if a record exists.\n\nDo you have authorization to overwrite this record?"
+    );
+
+    if (!confirmed) {
+        showResult("Overwrite cancelled.", "error");
+        return;
+    }
+
+    const password = prompt("Enter the authorized overwrite password:");
+
+    if (!password) {
+        showResult("Overwrite cancelled. Password was not provided.", "error");
+        return;
+    }
+
+    const secondConfirmation = confirm(
+        "Confirm overwrite for location ID: " + data.locationId +
+        "\nElection ID: " + data.electionId +
+        "\n\nContinue?"
+    );
+
+    if (!secondConfirmation) {
+        showResult("Overwrite cancelled.", "error");
+        return;
+    }
+
+    try {
+        showResult("Verifying authorization and submitting overwrite...", "success");
+
+        const response = await apiRequest("overwrite", {
+            ...data,
+            password: password
+        }, "POST");
+
+        showResult(
+            response.message || "Overwrite completed successfully.",
+            "success"
+        );
+    } catch (error) {
+        showResult("Overwrite failed: " + error.message, "error");
+    }
+}
+</script>
+
+
+
+</body></html>

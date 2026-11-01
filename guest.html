@@ -1,0 +1,775 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guest Booking 2025</title>
+<link rel="shortcut icon" href="https://www.iebc.or.ke/images/favicon.png">
+
+ <style>
+    :root {
+        /* IEBC-inspired green palette */
+        --green-primary: #7BC043;
+        --green-light: #A8E063;
+        --green-pale: #F1F9E9;
+        --green-dark: #285A25;
+        --green-deep: #173D20;
+        --white: #FFFFFF;
+        --text: #263328;
+        --border: #D7E8CD;
+        --green-glow: rgba(123, 192, 67, 0.35);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        background: linear-gradient(135deg, #F5FAF0, #E7F3DE);
+        color: var(--text);
+    }
+
+    header {
+        background: linear-gradient(120deg, var(--green-deep), var(--green-primary));
+        color: var(--white);
+        padding: 20px;
+        border-bottom: 3px solid var(--green-light);
+        box-shadow: 0 5px 20px rgba(40, 90, 37, 0.2);
+    }
+
+    header h1 {
+        margin: 0;
+        font-size: 22px;
+    }
+
+    nav {
+        background: var(--green-primary);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 12px 20px;
+        box-shadow: 0 4px 14px rgba(40, 90, 37, 0.12);
+    }
+
+    nav a {
+        color: #173D20;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        padding: 7px 10px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+
+    nav a:hover {
+        background: var(--white);
+        color: var(--green-dark);
+        box-shadow: 0 0 14px var(--green-glow);
+    }
+
+    main {
+        padding: 20px;
+    }
+
+    section {
+        background: var(--white);
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid var(--border);
+        border-left: 5px solid var(--green-primary);
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(40, 90, 37, 0.07);
+        transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease,
+            border-color 0.3s ease;
+    }
+
+    section:hover {
+        transform: translateY(-3px);
+        border-color: var(--green-primary);
+        box-shadow:
+            0 10px 28px rgba(40, 90, 37, 0.12),
+            0 0 22px var(--green-glow);
+    }
+
+    h2 {
+        margin-top: 0;
+        color: var(--green-dark);
+    }
+
+    label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+        color: var(--green-dark);
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 6px;
+        border: 1px solid #CBDCC1;
+        font-family: inherit;
+        font-size: 14px;
+        transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    input,
+    select,
+    textarea {
+        background: #FCFEFA;
+        color: var(--text);
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        outline: none;
+        border-color: var(--green-primary);
+        box-shadow: 0 0 0 3px var(--green-glow);
+    }
+
+    button {
+        background: var(--green-primary);
+        color: #173D20;
+        border: 1px solid var(--green-primary);
+        margin-top: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 3px 10px rgba(40, 90, 37, 0.12);
+        transition: all 0.3s ease;
+    }
+
+    button:hover {
+        background: var(--green-dark);
+        color: var(--white);
+        border-color: var(--green-light);
+        transform: translateY(-2px);
+        box-shadow:
+            0 7px 20px rgba(40, 90, 37, 0.2),
+            0 0 18px var(--green-glow);
+    }
+
+    button:active {
+        transform: translateY(0);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        background: var(--white);
+    }
+
+    table th,
+    table td {
+        border: 1px solid var(--border);
+        padding: 10px;
+        text-align: left;
+    }
+
+    table th {
+        background: var(--green-primary);
+        color: #173D20;
+    }
+
+    table tbody tr:nth-child(even) {
+        background: var(--green-pale);
+    }
+
+    table tbody tr:hover {
+        background: #E0F2D1;
+    }
+
+    footer {
+        background: var(--green-deep);
+        color: var(--white);
+        text-align: center;
+        padding: 14px;
+        font-size: 13px;
+        border-top: 4px solid var(--green-primary);
+    }
+
+    @media (max-width: 600px) {
+        main {
+            padding: 12px;
+        }
+
+        section {
+            padding: 15px;
+        }
+
+        nav {
+            gap: 5px;
+            padding: 10px;
+        }
+
+        nav a {
+            font-size: 13px;
+        }
+
+        table {
+            display: block;
+            overflow-x: auto;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            transition: none !important;
+            animation: none !important;
+        }
+
+        section:hover,
+        button:hover {
+            transform: none;
+        }
+    }
+</style>
+</head>
+
+<body>
+<div class="header">
+    
+    <img class="logo" src="https://www.iebc.or.ke/images/iebclogo1.png">
+</div>
+<div class="dashboard">
+<h2>Register Guest</h2>
+
+<div class="form-grid">
+<input id="txtFName" placeholder="First Name">
+<input id="txtMName" placeholder="Middle Name">
+<input id="txtLName" placeholder="Last Name">
+<input id="txtAddress" placeholder="National ID">
+<input id="txtNumber" placeholder="Polling Station">
+<input id="txtEmail" placeholder="Email (optional)">
+
+<select id="cboGender">
+<option value="">Select Gender</option>
+<option>Male</option>
+<option>Female</option>
+<option>Other</option>
+</select>
+</div>
+
+<button class="save" onclick="saveGuest()">Continue</button>
+<button class="back" onclick="goBack()">Back to previous page</button>
+<button class="cancel" onclick="cancelBooking()">Cancel Registration</button>
+
+<hr>
+<h3>Selected County</h3>
+
+<div class="form-grid">
+<input id="roomNumber" readonly="">
+<input id="roomType" readonly="">
+<input id="roomRate" readonly="">
+</div>
+
+<hr>
+<h3>Guest List</h3>
+
+<table>
+<thead>
+<tr>
+<th>#</th><th>Name</th><th>Contact</th><th>Status</th>
+</tr>
+</thead>
+<tbody id="guestTable"><tr><td>1</td><td>xxx xxx</td><td>xxx</td><td>Active</td></tr><tr><td>2</td><td>xxxx xxxxx</td><td>xxxxx</td><td>Active</td></tr><tr><td>3</td><td>wwwww wwww</td><td>wwwwww</td><td>Active</td></tr><tr><td>4</td><td>www www</td><td>ddddd</td><td>Active</td></tr><tr><td>5</td><td>rrrrr rrrrrr</td><td>rrrrrr</td><td>Active</td></tr><tr><td>6</td><td>ttttttttt tttttttttttttttttt</td><td>tttttttttttt</td><td>Active</td></tr><tr><td>7</td><td>yyyyyyyyyyyyyyy yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy</td><td>yyyyyyyyyyyyyyyyyyyyyyyyyy</td><td>Active</td></tr><tr><td>8</td><td>uuuuu uuuu</td><td>uuuuu</td><td>Active</td></tr><tr><td>9</td><td>samuel kabatha</td><td>796071670</td><td>Active</td></tr><tr><td>10</td><td>uuuuuuuuuuu ppppppppppppp</td><td>76868688</td><td>Active</td></tr><tr><td>11</td><td>samuel kabatha</td><td>796071670</td><td>Active</td></tr></tbody>
+</table>
+</div>
+<footer>
+    © 2026 Presidential Opinion Poll System | For Research and Academic Use
+</footer>
+
+<script>
+"use strict";
+
+const GUEST_API_URL = "https://script.google.com/macros/s/AKfycbx7ZtogE6YPh27eNqKixsBPzxOj7bh1RqSA5VJSaHXOBBYZbZnpwoGEJt3sFoh1DjG-/exec";
+
+const GUESTS_KEY = "guests";
+const CURRENT_GUEST_KEY = "currentGuest";
+const GUEST_QUEUE_KEY = "pendingGuestSyncV1";
+
+let guests = readStorage(GUESTS_KEY, []);
+let savingGuest = false;
+
+/* Safe storage reader */
+function readStorage(key, fallback) {
+    try {
+        const value = localStorage.getItem(key);
+        return value ? JSON.parse(value) : fallback;
+    } catch (error) {
+        console.error("Storage read failed:", key, error);
+        return fallback;
+    }
+}
+
+/* Safe element lookup */
+function field(id) {
+    return document.getElementById(id);
+}
+
+function fieldValue(id) {
+    return field(id)?.value?.trim() || "";
+}
+
+function setFieldValue(id, value) {
+    const element = field(id);
+    if (element) element.value = value ?? "";
+}
+
+function saveLocalGuests() {
+    localStorage.setItem(GUESTS_KEY, JSON.stringify(guests));
+}
+
+function getPendingGuestQueue() {
+    return readStorage(GUEST_QUEUE_KEY, {});
+}
+
+function savePendingGuestQueue(queue) {
+    localStorage.setItem(GUEST_QUEUE_KEY, JSON.stringify(queue));
+}
+
+function makeGuestId() {
+    if (window.crypto &&
+        typeof window.crypto.randomUUID === "function") {
+        return "GUEST-" + window.crypto.randomUUID();
+    }
+
+    return "GUEST-" + Date.now() + "-" +
+        Math.random().toString(36).slice(2);
+}
+
+/* =========================================
+   API HELPERS
+========================================= */
+
+function apiConfigured() {
+    return GUEST_API_URL &&
+        !GUEST_API_URL.includes("PASTE_YOUR_APPS_SCRIPT");
+}
+
+async function apiGet(action) {
+    if (!apiConfigured()) {
+        throw new Error("Apps Script API URL has not been configured.");
+    }
+
+    const url = new URL(GUEST_API_URL);
+    url.searchParams.set("action", action);
+    url.searchParams.set("_", Date.now().toString());
+
+    const response = await fetch(url.toString(), {
+        method: "GET",
+        redirect: "follow",
+        cache: "no-store"
+    });
+
+    if (!response.ok) {
+        throw new Error("API request failed: HTTP " + response.status);
+    }
+
+    const result = await response.json();
+
+    if (result.success === false) {
+        throw new Error(result.message || "API returned an error.");
+    }
+
+    return result;
+}
+
+async function apiPost(payload) {
+    if (!apiConfigured()) {
+        throw new Error("Apps Script API URL has not been configured.");
+    }
+
+    const response = await fetch(GUEST_API_URL, {
+        method: "POST",
+        redirect: "follow",
+        headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+        throw new Error("API request failed: HTTP " + response.status);
+    }
+
+    const result = await response.json();
+
+    if (result.success !== true) {
+        throw new Error(result.message || "Guest save was not confirmed.");
+    }
+
+    return result;
+}
+
+/* =========================================
+   SAVE GUEST
+========================================= */
+
+async function saveGuest() {
+    if (savingGuest) return;
+
+    const first = fieldValue("txtFName");
+    const middle = fieldValue("txtMName");
+    const last = fieldValue("txtLName");
+    const contact = fieldValue("txtNumber");
+
+    if (!first || !last || !contact) {
+        alert("Please fill in the first name, last name and contact number.");
+        return;
+    }
+
+    const email = fieldValue("txtEmail");
+    const address = fieldValue("txtAddress");
+    const gender = fieldValue("cboGender");
+
+    // Basic contact validation
+    if (contact.length < 5) {
+        alert("Please enter a valid contact number.");
+        return;
+    }
+
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert("Please enter a valid email address.");
+        return;
+    }
+
+    const guest = {
+        guestId: makeGuestId(),
+        first: first,
+        middle: middle,
+        last: last,
+        address: address,
+        contact: contact,
+        email: email,
+        gender: gender,
+        status: "Active",
+        date: new Date().toISOString()
+    };
+
+    savingGuest = true;
+
+    try {
+        /*
+         * Save locally FIRST so temporary network failures
+         * do not interrupt the guest-registration workflow.
+         */
+        guests = readStorage(GUESTS_KEY, []);
+
+        guests.push(guest);
+        saveLocalGuests();
+
+        localStorage.setItem(
+            CURRENT_GUEST_KEY,
+            JSON.stringify(guest)
+        );
+
+        const queue = getPendingGuestQueue();
+        queue[guest.guestId] = {
+            guest: guest,
+            status: "PENDING",
+            createdAt: new Date().toISOString()
+        };
+
+        savePendingGuestQueue(queue);
+
+        renderGuests();
+
+        /*
+         * Attempt central sync. If it fails, retain the queue
+         * and continue the existing booking workflow.
+         */
+        if (navigator.onLine && apiConfigured()) {
+            await syncOneGuest(guest.guestId);
+        }
+
+        window.location.href = "discount.html";
+
+    } catch (error) {
+        console.error("Could not save guest locally:", error);
+
+        alert(
+            "The guest could not be saved to this device. " +
+            "Check browser storage and try again."
+        );
+    } finally {
+        savingGuest = false;
+    }
+}
+
+/* =========================================
+   FETCH GUESTS FROM GOOGLE SHEETS
+========================================= */
+
+async function fetchGuestsFromBackend() {
+    const result = await apiGet("listGuests");
+
+    if (!Array.isArray(result.guests)) {
+        throw new Error(
+            "API response is missing the guests array. " +
+            "Expected {success:true, guests:[...]}."
+        );
+    }
+
+    return result.guests;
+}
+
+function mergeGuests(localGuests, serverGuests) {
+    const merged = new Map();
+
+    function identity(guest) {
+        if (guest.guestId) {
+            return "id:" + String(guest.guestId).trim();
+        }
+
+        /*
+         * Compatibility for older records without guestId.
+         * This is only a display merge key, not a reliable
+         * identity check for the central database.
+         */
+        return [
+            "legacy",
+            String(guest.first || "").trim().toLowerCase(),
+            String(guest.last || "").trim().toLowerCase(),
+            String(guest.contact || "").replace(/\s/g, "")
+        ].join(":");
+    }
+
+    // Server records take precedence when the same ID exists.
+    localGuests.forEach(guest => merged.set(identity(guest), guest));
+    serverGuests.forEach(guest => merged.set(identity(guest), guest));
+
+    return Array.from(merged.values());
+}
+
+async function loadGuests() {
+    guests = readStorage(GUESTS_KEY, []);
+    renderGuests();
+
+    if (!navigator.onLine || !apiConfigured()) {
+        return;
+    }
+
+    try {
+        const serverGuests = await fetchGuestsFromBackend();
+
+        guests = mergeGuests(guests, serverGuests);
+
+        saveLocalGuests();
+        renderGuests();
+
+        console.log("Central guest records loaded:", serverGuests.length);
+
+    } catch (error) {
+        console.error("Could not fetch guests from Apps Script:", error);
+
+        // Keep locally stored records visible if the API is unavailable.
+        renderGuests();
+    }
+}
+
+/* =========================================
+   SYNC PENDING GUESTS
+========================================= */
+
+async function syncOneGuest(guestId) {
+    const queue = getPendingGuestQueue();
+    const entry = queue[guestId];
+
+    if (!entry || entry.status === "SYNCED") return;
+
+    if (!navigator.onLine || !apiConfigured()) return;
+
+    entry.status = "SYNCING";
+    savePendingGuestQueue(queue);
+
+    try {
+        const result = await apiPost({
+            action: "saveGuest",
+            guest: entry.guest
+        });
+
+        /*
+         * The backend must return success only after it has
+         * saved the record or confirmed the same guestId exists.
+         */
+        const latestQueue = getPendingGuestQueue();
+
+        if (latestQueue[guestId]) {
+            latestQueue[guestId].status = "SYNCED";
+            latestQueue[guestId].syncedAt = new Date().toISOString();
+            latestQueue[guestId].serverMessage =
+                result.message || "Central database confirmed.";
+            savePendingGuestQueue(latestQueue);
+        }
+
+        console.log("Guest synchronised:", guestId);
+
+    } catch (error) {
+        console.warn("Guest remains queued for retry:", guestId, error);
+
+        const latestQueue = getPendingGuestQueue();
+
+        if (latestQueue[guestId]) {
+            latestQueue[guestId].status = "PENDING";
+            latestQueue[guestId].lastError =
+                error.message || "Sync failed.";
+            savePendingGuestQueue(latestQueue);
+        }
+    }
+}
+
+let guestSyncRunning = false;
+
+async function syncPendingGuests() {
+    if (guestSyncRunning || !navigator.onLine || !apiConfigured()) {
+        return;
+    }
+
+    guestSyncRunning = true;
+
+    try {
+        const queue = getPendingGuestQueue();
+        const ids = Object.keys(queue);
+
+        for (const id of ids) {
+            const latest = getPendingGuestQueue()[id];
+
+            if (latest && latest.status !== "SYNCED") {
+                await syncOneGuest(id);
+            }
+        }
+    } finally {
+        guestSyncRunning = false;
+    }
+}
+
+/* =========================================
+   BACK TO ROOMS
+========================================= */
+
+function goBack() {
+    window.location.href = "VOTER REGISTRATION.html";
+}
+
+/* =========================================
+   CANCEL BOOKING
+========================================= */
+
+function cancelBooking() {
+    if (confirm("Cancel booking and clear selected guest and room?")) {
+        localStorage.removeItem("selectedRoom");
+        localStorage.removeItem("currentGuest");
+
+        // Do not erase all guests or pending synchronisation records.
+        window.location.href = "index.html";
+    }
+}
+
+/* =========================================
+   LOAD ROOM
+========================================= */
+
+function loadRoom() {
+    const room = readStorage("selectedRoom", null);
+
+    if (!room) {
+        alert("No room selected. Please select a room first.");
+        goBack();
+        return false;
+    }
+
+    setFieldValue("roomNumber", room.number);
+    setFieldValue("roomType", room.type);
+    setFieldValue("roomRate", "KES " + room.rate);
+
+    return true;
+}
+
+/* =========================================
+   RENDER GUEST TABLE SAFELY
+========================================= */
+
+function renderGuests() {
+    const table = field("guestTable");
+
+    if (!table) {
+        console.warn("Element #guestTable was not found.");
+        return;
+    }
+
+    table.replaceChildren();
+
+    guests.forEach((guest, index) => {
+        const row = document.createElement("tr");
+
+        const name = [guest.first, guest.last]
+            .filter(Boolean)
+            .join(" ");
+
+        const values = [
+            index + 1,
+            name,
+            guest.contact || "",
+            guest.status || "Active"
+        ];
+
+        values.forEach(value => {
+            const cell = document.createElement("td");
+
+            // textContent prevents HTML/script injection from names.
+            cell.textContent = String(value);
+            row.appendChild(cell);
+        });
+
+        table.appendChild(row);
+    });
+}
+
+/* =========================================
+   STARTUP + AUTOMATIC RETRIES
+========================================= */
+
+async function initGuestPage() {
+    loadRoom();
+    renderGuests();
+
+    await loadGuests();
+    await syncPendingGuests();
+}
+
+window.addEventListener("online", () => {
+    loadGuests();
+    syncPendingGuests();
+});
+
+document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+        syncPendingGuests();
+    }
+});
+
+window.addEventListener("pageshow", () => {
+    syncPendingGuests();
+});
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initGuestPage);
+} else {
+    initGuestPage();
+}
+</script>
+
+
+
+
+</body></html>

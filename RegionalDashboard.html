@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Electoral Operations Workspace</title>
+<style>
+:root{--g:#176b39;--lime:#b2e84a;--ink:#15251b}*{box-sizing:border-box}body{margin:0;background:#f4f8f2;color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif}.top{background:#103d26;color:white;padding:22px 5vw;border-bottom:5px solid var(--lime)}.tag{color:#d5f69c;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:800}.top h1{margin:8px 0 4px}.top p{margin:0;color:#dce9df}.wrap{max-width:1000px;margin:28px auto;padding:0 18px}.notice{padding:14px;background:#fff;border:1px solid #dce7dd;border-radius:12px;line-height:1.6}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:18px}.tile{background:#fff;border:1px solid #dce7dd;border-radius:15px;padding:20px;box-shadow:0 8px 25px #163c2110}.tile b{display:block;margin-bottom:7px}.tile p{font-size:13px;line-height:1.5;color:#65746a}.btn{border:0;border-radius:9px;background:var(--g);color:white;padding:11px 15px;font-weight:800;cursor:pointer}footer{padding:22px;text-align:center;color:#6b796e;font-size:12px}
+</style></head><body>
+<header class="top"><div class="tag">Authorized staff workspace</div><h1 id="heading">Electoral Operations</h1><p id="subheading">Loading your verified workspace…</p></header>
+<main class="wrap"><div class="notice"><b>Prototype dashboard shell.</b> Your session is checked before this page is revealed. Connect operational data only through server functions that also verify the session and the user's role.</div>
+<div class="grid"><section class="tile"><b>📋 Records & submissions</b><p>Workspace placeholder for authorized records and forms.</p></section><section class="tile"><b>📊 Tally & reports</b><p>Workspace placeholder for role-appropriate summaries.</p></section><section class="tile"><b>🛡️ Security & audit</b><p>Keep audit logs and restrict sensitive actions to authorized roles.</p></section></div>
+<p style="margin-top:20px"><button class="btn" id="logout">Sign out</button></p></main><footer>Independent demonstration prototype — not an official IEBC service.</footer>
+<script>
+/* Include this script in each protected dashboard, near the end of the body.
+   Keep sensitive data hidden until the server validates this tab's session. */
+(async function(){
+  document.documentElement.style.visibility="hidden";
+  const expected = {FieldDashboard:"field",RegionalDashboard:"regional",NationalDashboard:"national"};
+  const page = new URLSearchParams(location.search).get("page") || "";
+  const token = sessionStorage.getItem("staffSessionToken");
+  try {
+    if(!token || !expected[page]) throw new Error("Missing session or invalid page.");
+    const result = await new Promise((resolve,reject)=>google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).validateStaffSession(token));
+    if(!result.success || result.role!==expected[page] || result.destination!==page) throw new Error("Session expired or not authorized.");
+    document.documentElement.style.visibility="visible";
+    document.dispatchEvent(new CustomEvent("staff-session-ready",{detail:result}));
+  } catch(e) {
+    sessionStorage.removeItem("staffSessionToken");sessionStorage.removeItem("staffRole");
+    alert("Your session is invalid or expired. Please sign in again.");
+    location.href=location.href.split("?")[0]+"?page=StaffLogin";
+  }
+})();
+</script>
+<script>
+document.addEventListener("staff-session-ready",event=>{
+ const role=event.detail.role;
+ const labels={field:"Field / County / Sub-county Workspace",regional:"Regional Tally Centre",national:"National Tally Centre / Administrator"};
+ document.getElementById("heading").textContent=labels[role]||"Electoral Operations";
+ document.getElementById("subheading").textContent="Signed in as "+event.detail.username+" · Session expires automatically.";
+});
+document.getElementById("logout").addEventListener("click",()=>{sessionStorage.removeItem("staffSessionToken");sessionStorage.removeItem("staffRole");location.href=location.href.split("?")[0]+"?page=StaffLogin";});
+</script></body></html>

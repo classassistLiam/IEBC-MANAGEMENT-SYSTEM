@@ -1,0 +1,182 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Election Observer App (Simulation)</title>
+    <link rel="shortcut icon" href="https://www.iebc.or.ke/images/favicon.png">
+<style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            background: #f1f8f3;
+        }
+        header {
+            background: linear-gradient(120deg, #071b10 0%, #008640 55%, #00a651 100%);
+            color: #fff;
+            padding: 15px 20px;
+            box-shadow: 0 4px 18px rgba(0, 166, 81, 0.25);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+        nav {
+            background: linear-gradient(90deg, #101510, #17251b, #008640);
+            display: flex;
+            gap: 15px;
+            padding: 10px 20px;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        nav a:hover {
+            color: #69f0a3;
+            text-decoration: underline;
+            text-shadow: 0 0 8px rgba(105, 240, 163, 0.5);
+        }
+        main {
+            padding: 20px;
+        }
+        section {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 100, 45, 0.10);
+            border-top: 3px solid #00a651;
+        }
+        h2 {
+            margin-top: 0;
+            color: #008640;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input, select, textarea, button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #b9d8c3;
+        }
+        button {
+            background: linear-gradient(120deg, #008640, #00a651);
+            color: #fff;
+            border: none;
+            margin-top: 15px;
+            cursor: pointer;
+            box-shadow: 0 3px 12px rgba(0, 166, 81, 0.20);
+        }
+        button:hover {
+            background: linear-gradient(120deg, #006b32, #008640);
+            box-shadow: 0 0 14px rgba(0, 166, 81, 0.35);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        table th, table td {
+            border: 1px solid #c8dfcf;
+            padding: 8px;
+            text-align: left;
+        }
+        table th {
+            background: linear-gradient(90deg, #d9f3e2, #effaf2);
+            color: #07552d;
+        }
+        footer {
+            background: linear-gradient(100deg, #101510, #17251b, #008640);
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            font-size: 13px;
+        }
+        .alert {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .success {
+            background-color: #d9f5e3;
+            color: #07552d;
+            border: 1px solid #a8dfbb;
+        }
+        .error {
+            background-color: #fff0f0;
+            color: #a51f1f;
+            border: 1px solid #f0b9b9;
+        }
+</style>
+
+        
+</head>
+<body><div class="header">
+    
+    <img class="logo" src="https://www.iebc.or.ke/images/iebclogo1.png">
+</div>
+    
+    <h2>Election Observer Submission (Simulation)</h2>
+
+    <label for="electionId">Election ID</label>
+<input id="electionId" required="" placeholder="e.g. ELECTION-2026">
+
+<label for="stationId">Unique Polling Station ID</label>
+<input id="stationId" required="" placeholder="e.g. COUNTY-WARD-001">
+
+<label for="station">Polling Station Name</label>
+<input id="station" required="">
+
+<label for="operatorId">Authorized Operator ID</label>
+<input id="operatorId" required="">
+
+<label for="registered">Registered Voters</label>
+<input id="registered" type="number" min="0" required="">
+
+<label for="turnout">Total Votes Cast</label>
+<input id="turnout" type="number" min="0" required="">
+
+<label for="candidateX">Candidate X Votes</label>
+<input id="candidateX" type="number" min="0" required="">
+<output id="percentageX">0.000%</output>
+
+<label for="candidateY">Candidate Y Votes</label>
+<input id="candidateY" type="number" min="0" required="">
+<output id="percentageY">0.000%</output>
+
+<label for="candidateZ">Candidate Z Votes</label>
+<input id="candidateZ" type="number" min="0" required="">
+<output id="percentageZ">0.000%</output>
+
+<label for="rejected">Rejected Votes</label>
+<input id="rejected" type="number" min="0" required="">
+
+<button type="submit">Submit Results</button>
+
+    <script>
+'use strict';
+const ELECTION_API_URL = 'https://script.google.com/macros/s/AKfycbx7ZtogE6YPh27eNqKixsBPzxOj7bh1RqSA5VJSaHXOBBYZbZnpwoGEJt3sFoh1DjG-/exec';
+const $ = id => document.getElementById(id);
+const value = id => $(id).value.trim();
+const number = id => Number($(id).value);
+function showStatus(id, message, type='warning') { const el=$(id); el.textContent=message; el.className='status show '+type; }
+function pct(v,total){ return total>0 ? ((v/total)*100).toFixed(3)+'%' : '0.000%'; }
+function apiGet(action, params={}) { const url=new URL(ELECTION_API_URL); url.searchParams.set('action',action); Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,String(v))); return fetch(url.toString()).then(async r=>{ if(!r.ok) throw new Error('API request failed (HTTP '+r.status+').'); const data=await r.json(); if(data.success===false) throw new Error(data.message||'API request failed.'); return data; }); }
+function apiPost(payload) { return fetch(ELECTION_API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)}).then(async r=>{if(!r.ok)throw new Error('API request failed (HTTP '+r.status+').');const data=await r.json();if(data.success===false)throw new Error(data.message||'The API rejected the request.');return data;}); }
+function getGPS(){return new Promise((resolve,reject)=>{if(!navigator.geolocation){reject(new Error('This browser does not support location services.'));return;}navigator.geolocation.getCurrentPosition(p=>resolve({gpsLatitude:p.coords.latitude,gpsLongitude:p.coords.longitude,gpsAccuracyMetres:p.coords.accuracy,gpsCapturedAt:new Date(p.timestamp).toISOString()}),e=>{const msg={1:'Location permission was denied.',2:'The device location is unavailable.',3:'Location request timed out.'};reject(new Error(msg[e.code]||'Could not get device location.'));},{enableHighAccuracy:true,timeout:20000,maximumAge:0});});}
+function updatePercentages(){const valid=['candidateX','candidateY','candidateZ'].reduce((sum,id)=>sum+(Number.isFinite(number(id))?number(id):0),0);[['candidateX','percentageX'],['candidateY','percentageY'],['candidateZ','percentageZ']].forEach(([inId,outId])=>$(outId).textContent=pct(Math.max(0,number(inId)||0),valid));}
+function validateRecord(){const required=['electionId','stationId','station','operatorId'];for(const id of required){if(!value(id))throw new Error('Please complete '+({electionId:'Election ID',stationId:'Unique station ID',station:'Polling station name',operatorId:'Operator ID'}[id])+'.');}
+const registered=number('registered'),cast=number('turnout'),x=number('candidateX'),y=number('candidateY'),z=number('candidateZ'),rejected=number('rejected');const nums=[registered,cast,x,y,z,rejected];if(nums.some(n=>!Number.isInteger(n)||n<0))throw new Error('All voter and vote totals must be non-negative whole numbers.');if(registered<1)throw new Error('Registered voters must be at least 1.');if(cast>registered)throw new Error('Votes cast cannot exceed registered voters.');if(x+y+z+rejected!==cast)throw new Error('Candidate votes plus rejected votes must equal total votes cast.');return {registered,cast,valid:x+y+z,rejected,x,y,z};}
+function refreshValidation(){try{const r=validateRecord();$('validationState').textContent='Checks passed';$('validationNote').textContent='Valid '+r.valid+' · rejected '+r.rejected+' · cast '+r.cast; $('validationState').style.color='var(--green)';}catch(e){$('validationState').textContent='Needs attention';$('validationNote').textContent=e.message;$('validationState').style.color='#a15a00';}}
+['candidateX','candidateY','candidateZ','turnout','registered','rejected'].forEach(id=>$(id).addEventListener('input',()=>{updatePercentages();refreshValidation();}));
+$('voteForm').addEventListener('submit',async event=>{event.preventDefault();const btn=$('submitButton');btn.disabled=true;btn.textContent='Checking record…';try{const totals=validateRecord();showStatus('status','Checking for an existing station record…','warning');const duplicate=await apiGet('checkElectionDuplicate',{electionId:value('electionId'),locationId:value('stationId')});if(duplicate.duplicate)throw new Error('A record already exists for this election and station. Use the authorized overwrite workflow if a correction is required.');showStatus('status','Requesting location permission…','warning');const gps=await getGPS();const record={electionId:value('electionId'),locationId:value('stationId'),locationName:value('station'),registered:totals.registered,cast:totals.cast,valid:totals.valid,rejected:totals.rejected,candidates:{X:totals.x,Y:totals.y,Z:totals.z},gpsLatitude:gps.gpsLatitude,gpsLongitude:gps.gpsLongitude,gpsAccuracyMetres:gps.gpsAccuracyMetres,gpsCapturedAt:gps.gpsCapturedAt,updatedBy:value('operatorId'),submittedAt:new Date().toISOString(),percentages:{X:pct(totals.x,totals.valid),Y:pct(totals.y,totals.valid),Z:pct(totals.z,totals.valid)}};showStatus('status','Sending the record to the configured Apps Script…','warning');const result=await apiPost({action:'saveElectionResult',record});showStatus('status',result.message||'The API reported that the record was saved. Verify it in the spreadsheet during testing.','success');}catch(err){showStatus('status',err.message||'Submission failed. Check the API deployment and try again.','error');}finally{btn.disabled=false;btn.textContent='Submit results securely';refreshValidation();}});
+$('resetButton').addEventListener('click',()=>{setTimeout(()=>{updatePercentages();refreshValidation();$('status').className='status';},0);});
+$('fetchForm').addEventListener('submit',async event=>{event.preventDefault();const btn=$('fetchButton'),out=$('fetchedResults');btn.disabled=true;btn.textContent='Fetching…';out.hidden=true;try{showStatus('fetchStatus','Searching the central API…','warning');const result=await apiGet('getElectionResult',{electionId:value('fetchElectionId'),locationId:value('fetchStationId')});if(result.found===false||!result.record)throw new Error('No matching record was returned. Check the election and station IDs.');const r=result.record,c=r.candidates||{};const rows=[['Station',r.locationName??r.locationId??'—'],['Registered voters',r.registered??'—'],['Votes cast',r.cast??'—'],['Valid votes',r.valid??'—'],['Rejected votes',r.rejected??'—'],['Candidate X',c.X??'—'],['Candidate Y',c.Y??'—'],['Candidate Z',c.Z??'—']];out.replaceChildren(...rows.map(([k,v])=>{const row=document.createElement('div');row.className='result-row';const s=document.createElement('span');s.textContent=k;const b=document.createElement('strong');b.textContent=String(v);row.append(s,b);return row;}));out.hidden=false;showStatus('fetchStatus','Record returned by the API. Confirm the details against your authorized source record.','success');}catch(err){showStatus('fetchStatus',err.message||'Could not fetch record.','error');}finally{btn.disabled=false;btn.textContent='Fetch record';}});
+updatePercentages();refreshValidation();
+</script>
+
+</body></html>

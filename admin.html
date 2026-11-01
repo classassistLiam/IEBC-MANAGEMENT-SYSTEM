@@ -1,0 +1,591 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8">
+<title>Room Management</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+ <style>
+    :root {
+        --green: #86c96b;
+        --green-dark: #244b36;
+        --green-deep: #142c22;
+        --green-pale: #f0f7ed;
+        --white: #ffffff;
+        --text: #26352c;
+        --muted: #718075;
+        --border: #dce8dc;
+        --glow: rgba(134, 201, 107, 0.35);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        background: linear-gradient(135deg, #f4f8f1, #e9f2e5);
+        color: var(--text);
+    }
+
+    header {
+        background: linear-gradient(120deg, var(--green-deep), var(--green-dark));
+        color: var(--white);
+        padding: 15px 20px;
+        box-shadow: 0 4px 20px rgba(20, 44, 34, 0.15);
+    }
+
+    header h1 {
+        margin: 0;
+        font-size: 22px;
+    }
+
+    nav {
+        background: #ffffff;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 12px 20px;
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 4px 15px rgba(36, 75, 54, 0.04);
+    }
+
+    nav a {
+        color: var(--green-dark);
+        text-decoration: none;
+        font-size: 14px;
+        padding: 6px 9px;
+        border-radius: 6px;
+        transition: color 0.25s ease, background 0.25s ease;
+    }
+
+    nav a:hover {
+        color: #163c24;
+        background: var(--green-pale);
+        text-decoration: none;
+    }
+
+    main {
+        padding: 20px;
+    }
+
+    section {
+        background: rgba(255, 255, 255, 0.94);
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        box-shadow: 0 4px 14px rgba(36, 75, 54, 0.06);
+        transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease,
+            border-color 0.3s ease;
+    }
+
+    section:hover {
+        transform: translateY(-3px);
+        border-color: var(--green);
+        box-shadow:
+            0 12px 30px rgba(36, 75, 54, 0.10),
+            0 0 22px var(--glow);
+    }
+
+    h2 {
+        margin-top: 0;
+        color: var(--green-dark);
+    }
+
+    label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+        color: var(--green-dark);
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 7px;
+        border: 1px solid #cfdbcf;
+        font: inherit;
+        transition:
+            border-color 0.25s ease,
+            box-shadow 0.25s ease;
+    }
+
+    input,
+    select,
+    textarea {
+        background: #fcfefb;
+        color: var(--text);
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        outline: none;
+        border-color: var(--green);
+        box-shadow: 0 0 0 3px var(--glow);
+    }
+
+    button {
+        background: linear-gradient(120deg, #5a9e45, #2e7144);
+        color: var(--white);
+        border: 1px solid transparent;
+        margin-top: 15px;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 3px 10px rgba(46, 113, 68, 0.15);
+        transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease,
+            background 0.25s ease;
+    }
+
+    button:hover {
+        background: linear-gradient(120deg, #75b85a, #3c8952);
+        transform: translateY(-2px);
+        box-shadow:
+            0 7px 20px rgba(46, 113, 68, 0.22),
+            0 0 18px var(--glow);
+    }
+
+    button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 8px rgba(46, 113, 68, 0.15);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        background: var(--white);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    table th,
+    table td {
+        border: 1px solid var(--border);
+        padding: 10px;
+        text-align: left;
+    }
+
+    table th {
+        background: #e8f3e3;
+        color: var(--green-dark);
+    }
+
+    table tr:hover td {
+        background: #f5faf2;
+    }
+
+    footer {
+        background: var(--green-deep);
+        color: var(--white);
+        text-align: center;
+        padding: 14px;
+        font-size: 13px;
+        border-top: 3px solid var(--green);
+    }
+
+    /* Respect visitors who prefer reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation: none !important;
+            transition: none !important;
+            scroll-behavior: auto !important;
+        }
+
+        section:hover,
+        button:hover {
+            transform: none;
+        }
+    }
+
+    /* Improve layout on small screens */
+    @media (max-width: 600px) {
+        main {
+            padding: 12px;
+        }
+
+        section {
+            padding: 15px;
+        }
+
+        nav {
+            gap: 6px;
+            padding: 10px;
+        }
+
+        table {
+            display: block;
+            overflow-x: auto;
+        }
+    }
+</style>
+</head>
+
+<body>
+<div class="header">
+    
+    <img class="logo" src="https://www.iebc.or.ke/images/iebclogo1.png">
+</div>
+
+
+<div class="room-grid">
+
+  <div class="room-card">
+    <h3>Room 101 – Turkana County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('101','Turkana County',5400)">Select</button>
+  </div>
+
+  <div class="room-card">
+    <h3>Room 102 – West pokot County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('103','West pokot County',5400)">Select</button>
+  </div>
+
+  <div class="room-card">
+    <h3>Room 103 – Kakamega County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('103','Kakamega Room',5400)">Select</button>
+  </div>
+  <div class="room-card">
+    <h3>Room 104 – Trans nzoia County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('104','Trans nzoia County',5400)">Select</button>
+  </div>
+   <div class="room-card">
+    <h3>Room 105 – Uasin gishu County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('105','Uasin gishu County',5400)">Select</button>
+  </div>
+  <div class="room-card">
+    <h3>Room 106 – Bungoma County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('106','Bungoma County',5400)">Select</button>
+  </div>
+   <div class="room-card">
+    <h3>Room 107 – Busia County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('107','Busia County',5400)">Select</button>
+  </div>
+    <div class="room-card">
+    <h3>Room 108 – Nandi County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('108','Nandi County',5400)">Select</button>
+  </div>
+    <div class="room-card">
+    <h3>Room 109 – Vihiga County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('109','Vihiga County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 110 – Siaya County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('110','Siaya County',5400)">Select</button>
+  </div>
+   <div class="room-card">
+    <h3>Room 111 – Kisumu County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('111','Kisumu County',5400)">Select</button>
+  </div>
+    <div class="room-card">
+    <h3>Room 112 – Kericho County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('112','Kericho County',5400)">Select</button>
+  </div>
+    <div class="room-card">
+    <h3>Room 113 – Homa Bay County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('113','Homa bay County',5400)">Select</button>
+  </div>
+    <div class="room-card">
+    <h3>Room 114 – Kisii County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('114','Kisii County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 115 – Migori County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('115','Migori County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 116 – Nyamira County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('116','Nyamira County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 117 – Bomet County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('117','Bomet County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 118 – Nyandarua County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('118','Nyandarua County',5400)">Select</button>
+  </div>
+      <div class="room-card">
+    <h3>Room 119 – Nyeri County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('119','Nyeri County',5400)">Select</button>
+  </div>
+       <div class="room-card">
+    <h3>Room 120 – Kiambu County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('120','Kiambu County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 121 – Nairobi County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('121','Nairobi County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 122 – Mombasa County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('122','Mombasa County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 123 – Tharaka-nithi County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('123','Tharaka-nithi',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 124 – Kirinyaga County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('124','Kirinyaga County',5400)">Select</button>
+  </div>
+    <div class="room-card">
+    <h3>Room 125 – Embu County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('125','Embu County',5400)">Select</button>
+  </div>
+    <div class="room-card">
+    <h3>Room 126 – Murangá County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('126','Murang'a County',5400)">Select</button>
+  </div>
+    <div class="room-card">
+    <h3>Room 127 – Marsabit County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('127','Marsabit County',5400)">Select</button>
+  </div>
+    <div class="room-card">
+    <h3>Room 128 – Mandera County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('128','Mandera County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 129 – Wajir County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('128','Wajir County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 130 – Isiolo County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('130','Isiolo County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 131 – Garissa County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('131','Garissa County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 132 – Tana River County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('132','Tana River County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 133 – Kitui County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('133','Kitui County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 134 – Kilifi County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('134','Kilifi County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 135 – Taita Taveta County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('135','Taita Taveta County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 136 – Kajiado County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('136','Kajiado County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 137 – Narok County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('137','Narok County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 138 – Nakuru County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('138','Nakuru County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 139 – Baringo County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('139','Baringo County',5400)">Select</button>
+  </div>
+    <div class="room-card">
+    <h3>Room 140 – Samburu County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('140','Samburu County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 141 – Elgeyo marakwet County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('141','Marakwet County',5400)">Select</button>
+  </div>
+    <div class="room-card">
+    <h3>Room 142 – Laikipia County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('142','Laikipia County',5400)">Select</button>
+  </div>
+    <div class="room-card">
+    <h3>Room 143 – Meru County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('143','Meru County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 144 – Machakos County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('144','Machakos County',5400)">Select</button>
+  </div>
+      <div class="room-card">
+    <h3>Room 145 – Makueni County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('145','Makueni County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 146 – Kwale County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('146','Kwale County',5400)">Select</button>
+  </div>
+     <div class="room-card">
+    <h3>Room 147 – Lamu County</h3>
+    <p>Class: County</p>
+    <p>Rate: KES 5,400</p>
+    <button onclick="selectRoom('147','Lamu',5400)">Select</button>
+  </div>
+  <div class="room-card">
+    <h3>Room 201 – Queen Room</h3>
+    <p>Class: Deluxe</p>
+    <p>Rate: KES 4,500</p>
+    <button onclick="selectRoom('201','Queen Room',4500)">Select</button>
+  </div>
+
+  <div class="room-card">
+    <h3>Room 202 – King Room</h3>
+    <p>Class: Deluxe</p>
+    <p>Rate: KES 5,000</p>
+    <button onclick="selectRoom('202','King Room',5000)">Select</button>
+  </div>
+
+  <div class="room-card">
+    <h3>Room 301 – Junior Suite</h3>
+    <p>Class: Suite</p>
+    <p>Rate: KES 6,500</p>
+    <button onclick="selectRoom('301','Junior Suite',6500)">Select</button>
+  </div>
+
+  <div class="room-card">
+    <h3>Room 302 – Executive Suite</h3>
+    <p>Class: Suite</p>
+    <p>Rate: KES 8,000</p>
+    <button onclick="selectRoom('302','Executive Suite',8000)">Select</button>
+  </div>
+
+  <div class="room-card">
+    <h3>Room 401 – Family Room</h3>
+    <p>Occupancy: 4 Guests</p>
+    <p>Rate: KES 7,000</p>
+    <button onclick="selectRoom('401','Family Room',7000)">Select</button>
+  </div>
+
+  <div class="room-card">
+    <h3>Room 402 – Honeymoon Suite</h3>
+    <p>Class: Premium</p>
+    <p>Rate: KES 9,500</p>
+    <button onclick="selectRoom('402','Honeymoon Suite',9500)">Select</button>
+  </div>
+
+  <div class="room-card">
+    <h3>Room 501 – Presidential Suite</h3>
+    <p>Top Tier</p>
+    <p>Rate: KES 15,000</p>
+    <button onclick="selectRoom('501','Presidential Suite',15000)">Select</button>
+  </div>
+
+</div>
+<footer>
+    © 2026 Presidential Opinion Poll System | For Research and Academic Use
+</footer>
+<script>
+function selectRoom(number, type, rate){
+    const room = { number, type, rate };
+    localStorage.setItem("selectedRoom", JSON.stringify(room));
+    console.log("Room saved:", room);
+    window.location.href = "guest.html";
+}
+</script>
+
+
+
+</body></html>

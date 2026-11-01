@@ -1,0 +1,29 @@
+https://script.google.com/macros/s/AKfycbx7ZtogE6YPh27eNqKixsBPzxOj7bh1RqSA5VJSaHXOBBYZbZnpwoGEJt3sFoh1DjG-/exec
+
+
+
+
+{
+  "fielddemo": {
+    "role": "field",
+    "passwordHash": " 4c10dfeb0e25850197aa4ce7ec3a8b1e77148a5189f7495e05517b33cba6e6d6",
+    "question": "What is your assigned safaricom phone number?",
+    "answerHash": " 4c10dfeb0e25850197aa4ce7ec3a8b1e77148a5189f7495e05517b33cba6e6d6"
+  },
+  "regionaldemo": {
+    "role": "regional",
+    "passwordHash": "4c10dfeb0e25850197aa4ce7ec3a8b1e77148a5189f7495e05517b33cba6e6d6",
+    "question": "What is your work phone number?",
+    "answerHash": "4c10dfeb0e25850197aa4ce7ec3a8b1e77148a5189f7495e05517b33cba6e6d6"
+  },
+  "nationaldemo": {
+    "role": "national",
+    "passwordHash": "4c10dfeb0e25850197aa4ce7ec3a8b1e77148a5189f7495e05517b33cba6e6d6",
+    "question": "What is your assigned demonstration security word?",
+    "answerHash": "4c10dfeb0e25850197aa4ce7ec3a8b1e77148a5189f7495e05517b33cba6e6d6"
+  }
+}
+
+
+5b45a00069f6b8f3c124d8ae0ef82eb5c008f4b9d0797b7d9a57011b2783b4aa
+https://web.facebook.com/share/p/1DpcnbF7XT/

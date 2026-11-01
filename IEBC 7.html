@@ -1,0 +1,214 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Election Observer App</title>
+
+<style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            background: #f1f8f3;
+        }
+        header {
+            background: linear-gradient(120deg, #071b10 0%, #008640 55%, #00a651 100%);
+            color: #fff;
+            padding: 15px 20px;
+            box-shadow: 0 4px 18px rgba(0, 166, 81, 0.25);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+        nav {
+            background: linear-gradient(90deg, #101510, #17251b, #008640);
+            display: flex;
+            gap: 15px;
+            padding: 10px 20px;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        nav a:hover {
+            color: #69f0a3;
+            text-decoration: underline;
+            text-shadow: 0 0 8px rgba(105, 240, 163, 0.5);
+        }
+        main {
+            padding: 20px;
+        }
+        section {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 100, 45, 0.10);
+            border-top: 3px solid #00a651;
+        }
+        h2 {
+            margin-top: 0;
+            color: #008640;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input, select, textarea, button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #b9d8c3;
+        }
+        button {
+            background: linear-gradient(120deg, #008640, #00a651);
+            color: #fff;
+            border: none;
+            margin-top: 15px;
+            cursor: pointer;
+            box-shadow: 0 3px 12px rgba(0, 166, 81, 0.20);
+        }
+        button:hover {
+            background: linear-gradient(120deg, #006b32, #008640);
+            box-shadow: 0 0 14px rgba(0, 166, 81, 0.35);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        table th, table td {
+            border: 1px solid #c8dfcf;
+            padding: 8px;
+            text-align: left;
+        }
+        table th {
+            background: linear-gradient(90deg, #d9f3e2, #effaf2);
+            color: #07552d;
+        }
+        footer {
+            background: linear-gradient(100deg, #101510, #17251b, #008640);
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            font-size: 13px;
+        }
+        .alert {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .success {
+            background-color: #d9f5e3;
+            color: #07552d;
+            border: 1px solid #a8dfbb;
+        }
+        .error {
+            background-color: #fff0f0;
+            color: #a51f1f;
+            border: 1px solid #f0b9b9;
+        }
+</style>
+
+</head>
+<body>
+<div class="header">
+    
+    <img class="logo" src="https://www.iebc.or.ke/images/iebclogo1.png">
+</div>
+<div class="container">
+<h2>Election Observer Submission</h2>
+
+<form id="voteForm">
+<label for="station">Polling Station:</label>
+<select id="station" required="">
+  <option value="">Select Station</option>
+  <option value="Station A">Station A</option>
+  <option value="Station B">Station B</option>
+  <option value="Station C">Station C</option>
+</select>
+
+<label for="candidateX">Votes for Candidate X:</label>
+<input type="number" id="candidateX" min="0" required="">
+
+<label for="candidateY">Votes for Candidate Y:</label>
+<input type="number" id="candidateY" min="0" required="">
+
+<label for="candidateZ">Votes for Candidate Z:</label>
+<input type="number" id="candidateZ" min="0" required="">
+
+<label for="turnout">Total Turnout:</label>
+<input type="number" id="turnout" min="0" required="">
+
+<label for="gps">GPS Location:</label>
+<input type="text" id="gps" placeholder="Auto-fill GPS" required="">
+
+<button type="button" onclick="getLocation()">Use Current Location</button>
+<button type="submit">Submit Votes</button>
+
+<div class="alert success" id="successMsg">Votes submitted successfully!</div>
+<div class="alert error" id="errorMsg">Error submitting votes. Try again.</div>
+</form>
+</div>
+
+<script>
+const API_URL = 'YOUR_WEB_APP_URL_HERE'; // Replace with your Apps Script Web App URL
+
+// Live GPS autofill
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            position => {
+                document.getElementById('gps').value = `${position.coords.latitude}, ${position.coords.longitude}`;
+            },
+            error => {
+                alert('Unable to fetch location. Please enter manually.');
+            }
+        );
+    } else {
+        alert('Geolocation not supported by your device.');
+    }
+}
+
+document.getElementById("voteForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const voteData = {
+        station: document.getElementById("station").value,
+        votes: {
+            X: parseInt(document.getElementById("candidateX").value),
+            Y: parseInt(document.getElementById("candidateY").value),
+            Z: parseInt(document.getElementById("candidateZ").value)
+        },
+        turnout: parseInt(document.getElementById("turnout").value),
+        gps: document.getElementById("gps").value
+    };
+
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            body: JSON.stringify(voteData),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const result = await response.json();
+
+        if (result.status === 'success') {
+            document.getElementById("successMsg").style.display = "block";
+            document.getElementById("errorMsg").style.display = "none";
+            document.getElementById("voteForm").reset();
+        } else {
+            throw new Error(result.message || "Unknown error");
+        }
+    } catch (err) {
+        document.getElementById("errorMsg").style.display = "block";
+        document.getElementById("successMsg").style.display = "none";
+        console.error(err);
+    }
+});
+</script>
+
+
+</body></html>

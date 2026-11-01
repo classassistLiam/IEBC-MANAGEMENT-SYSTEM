@@ -1,0 +1,21 @@
+<script>
+/* Include this script in each protected dashboard, near the end of the body.
+   Keep sensitive data hidden until the server validates this tab's session. */
+(async function(){
+  document.documentElement.style.visibility="hidden";
+  const expected = {FieldDashboard:"field",RegionalDashboard:"regional",NationalDashboard:"national"};
+  const page = new URLSearchParams(location.search).get("page") || "";
+  const token = sessionStorage.getItem("staffSessionToken");
+  try {
+    if(!token || !expected[page]) throw new Error("Missing session or invalid page.");
+    const result = await new Promise((resolve,reject)=>google.script.run.withSuccessHandler(resolve).withFailureHandler(reject).validateStaffSession(token));
+    if(!result.success || result.role!==expected[page] || result.destination!==page) throw new Error("Session expired or not authorized.");
+    document.documentElement.style.visibility="visible";
+    document.dispatchEvent(new CustomEvent("staff-session-ready",{detail:result}));
+  } catch(e) {
+    sessionStorage.removeItem("staffSessionToken");sessionStorage.removeItem("staffRole");
+    alert("Your session is invalid or expired. Please sign in again.");
+    location.href=location.href.split("?")[0]+"?page=StaffLogin";
+  }
+})();
+</script>

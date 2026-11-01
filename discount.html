@@ -1,0 +1,357 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8">
+<title>Discount Management</title>
+
+ 
+<style>
+    :root {
+        --green-bright: #7BC043;
+        --green-hover: #65A832;
+        --green-dark: #214D2B;
+        --green-deep: #16351F;
+        --green-pale: #F1F8EC;
+        --white: #FFFFFF;
+        --text: #29372B;
+        --border: #D8E6D1;
+        --glow: rgba(123, 192, 67, 0.30);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        background: var(--green-pale);
+        color: var(--text);
+    }
+
+    /* Dark green header */
+    header {
+        background: linear-gradient(120deg, var(--green-deep), var(--green-dark));
+        color: var(--white);
+        padding: 18px 20px;
+        border-bottom: 3px solid var(--green-bright);
+        box-shadow: 0 4px 16px rgba(22, 53, 31, 0.16);
+    }
+
+    header h1 {
+        margin: 0;
+        font-size: 22px;
+    }
+
+    /* Bright green navigation */
+    nav {
+        background: var(--green-bright);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 12px 20px;
+        box-shadow: 0 4px 14px rgba(33, 77, 43, 0.12);
+    }
+
+    nav a {
+        color: var(--green-deep);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        padding: 7px 10px;
+        border-radius: 6px;
+        transition: 0.25s ease;
+    }
+
+    nav a:hover {
+        background: var(--white);
+        color: var(--green-dark);
+        box-shadow: 0 0 16px var(--glow);
+    }
+
+    main {
+        padding: 20px;
+    }
+
+    /* Clean cards with cinematic green hover */
+    section {
+        background: var(--white);
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid var(--border);
+        border-left: 4px solid var(--green-bright);
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(33, 77, 43, 0.06);
+        transition: transform 0.3s ease,
+                    box-shadow 0.3s ease,
+                    border-color 0.3s ease;
+    }
+
+    section:hover {
+        transform: translateY(-3px);
+        border-color: var(--green-bright);
+        box-shadow:
+            0 10px 26px rgba(33, 77, 43, 0.10),
+            0 0 20px var(--glow);
+    }
+
+    h2 {
+        margin-top: 0;
+        color: var(--green-dark);
+    }
+
+    label {
+        display: block;
+        margin-top: 10px;
+        font-weight: bold;
+        color: var(--green-dark);
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 6px;
+        border: 1px solid #CEDDC7;
+        font-family: inherit;
+        font-size: 14px;
+    }
+
+    input,
+    select,
+    textarea {
+        background: #FCFEFA;
+        color: var(--text);
+        transition: border-color 0.25s ease,
+                    box-shadow 0.25s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        outline: none;
+        border-color: var(--green-bright);
+        box-shadow: 0 0 0 3px var(--glow);
+    }
+
+    /* Bright green interactive buttons */
+    button {
+        background: var(--green-bright);
+        color: var(--green-deep);
+        border: 1px solid var(--green-bright);
+        margin-top: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 3px 10px rgba(33, 77, 43, 0.10);
+        transition: background 0.25s ease,
+                    color 0.25s ease,
+                    transform 0.25s ease,
+                    box-shadow 0.25s ease;
+    }
+
+    button:hover {
+        background: var(--green-hover);
+        color: var(--white);
+        transform: translateY(-2px);
+        box-shadow:
+            0 7px 18px rgba(33, 77, 43, 0.18),
+            0 0 18px var(--glow);
+    }
+
+    button:active {
+        transform: translateY(0);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        background: var(--white);
+    }
+
+    table th,
+    table td {
+        border: 1px solid var(--border);
+        padding: 10px;
+        text-align: left;
+    }
+
+    table th {
+        background: var(--green-bright);
+        color: var(--green-deep);
+    }
+
+    table tbody tr:nth-child(even) {
+        background: var(--green-pale);
+    }
+
+    table tbody tr:hover {
+        background: #E4F2D9;
+    }
+
+    /* Dark green footer */
+    footer {
+        background: var(--green-deep);
+        color: var(--white);
+        text-align: center;
+        padding: 14px;
+        font-size: 13px;
+        border-top: 3px solid var(--green-bright);
+    }
+
+    /* Responsive layout */
+    @media (max-width: 600px) {
+        main {
+            padding: 12px;
+        }
+
+        section {
+            padding: 15px;
+        }
+
+        nav {
+            gap: 6px;
+            padding: 10px;
+        }
+
+        nav a {
+            font-size: 13px;
+        }
+
+        table {
+            display: block;
+            overflow-x: auto;
+        }
+    }
+
+    /* Accessibility: respect reduced-motion preferences */
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            transition: none !important;
+            animation: none !important;
+        }
+
+        section:hover,
+        button:hover {
+            transform: none;
+        }
+    }
+</style>
+
+</head>
+
+<body>
+<div class="header">
+    
+    <img class="logo" src="https://www.iebc.or.ke/images/iebclogo1.png">
+</div>
+<div class="container">
+<h2>Select Discount</h2>
+
+<div class="form-row">
+<label>Discount Type</label>
+<input id="txtType">
+</div>
+
+<div class="form-row">
+<label>Rate (%)</label>
+<input id="txtRate">
+</div>
+
+<div class="actions">
+<button class="save" onclick="saveDiscount()">Save</button>
+<button class="cancel" onclick="clearForm()">Cancel</button>
+</div>
+
+<table>
+<thead>
+<tr><th>ID</th><th>Type</th><th>Rate</th></tr>
+</thead>
+<tbody id="discountTable"><tr><td>1</td><td>xxx</td><td>0%</td></tr><tr><td>2</td><td>xxxx</td><td>0%</td></tr><tr><td>3</td><td>xxxx</td><td>0%</td></tr><tr><td>4</td><td>wwww</td><td>0%</td></tr><tr><td>5</td><td>wwwwww</td><td>0%</td></tr><tr><td>6</td><td>qqqqqq</td><td>0%</td></tr><tr><td>7</td><td>qqqqqq</td><td>0%</td></tr><tr><td>8</td><td>rrrrrr</td><td>0%</td></tr><tr><td>9</td><td>rrrrr</td><td>100%</td></tr><tr><td>10</td><td>ttttttt</td><td>100%</td></tr><tr><td>11</td><td>yyyyyyyyyyyyyyy</td><td>100%</td></tr></tbody>
+</table>
+
+<div class="actions">
+<button class="save" onclick="proceed()">Proceed to Reservation</button>
+</div>
+</div>
+<footer>
+    © 2026 Presidential Opinion Poll System | For Research and Academic Use
+</footer>
+<script>
+let discounts = JSON.parse(localStorage.getItem("discounts")) || [];
+let selectedDiscount = null;
+
+/* LOAD */
+window.onload = () => {
+ applyLoyaltyDiscount();
+ render();
+};
+
+/* SAVE DISCOUNT */
+function saveDiscount(){
+ if(!txtType.value || !txtRate.value){
+  alert("Fill all fields"); return;
+ }
+ discounts.push({
+  id: discounts.length+1,
+  type: txtType.value,
+  rate: parseFloat(txtRate.value)/100
+ });
+ localStorage.setItem("discounts",JSON.stringify(discounts));
+ clearForm(); render();
+}
+
+/* RENDER TABLE */
+function render(){
+ discountTable.innerHTML="";
+ discounts.forEach(d=>{
+  let r=document.createElement("tr");
+  r.innerHTML=`<td>${d.id}</td><td>${d.type}</td><td>${d.rate*100}%</td>`;
+  r.onclick=()=>select(d);
+  discountTable.appendChild(r);
+ });
+}
+
+/* SELECT */
+function select(d){
+ selectedDiscount=d;
+ localStorage.setItem("selectedDiscount",JSON.stringify(d));
+ alert("Selected: "+d.type);
+}
+
+/* CLEAR */
+function clearForm(){
+ txtType.value=""; txtRate.value="";
+}
+
+/* LOYALTY AUTO-DISCOUNT */
+function applyLoyaltyDiscount(){
+ const guest = JSON.parse(localStorage.getItem("currentGuest"));
+ if(!guest || !guest.email) return;
+
+ let visits = Number(localStorage.getItem("visits_"+guest.email))||0;
+ let loyalty = null;
+
+ if(visits>=5) loyalty={type:"VIP Loyalty",rate:0.20};
+ else if(visits>=3) loyalty={type:"Regular Loyalty",rate:0.10};
+
+ if(loyalty){
+  localStorage.setItem("selectedDiscount",JSON.stringify(loyalty));
+ }
+}
+
+/* PROCEED */
+function proceed(){
+ if(!localStorage.getItem("selectedDiscount")){
+  alert("Select a discount first"); return;
+ }
+ window.location.href="presidential_opinion_poll_html_system.html";
+}
+</script>
+
+
+
+</body></html>

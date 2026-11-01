@@ -1,0 +1,236 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8">
+<title>IEBC Pro Monitoring System</title>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@2"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            background: #f1f8f3;
+        }
+        header {
+            background: linear-gradient(120deg, #071b10 0%, #008640 55%, #00a651 100%);
+            color: #fff;
+            padding: 15px 20px;
+            box-shadow: 0 4px 18px rgba(0, 166, 81, 0.25);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+        nav {
+            background: linear-gradient(90deg, #101510, #17251b, #008640);
+            display: flex;
+            gap: 15px;
+            padding: 10px 20px;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        nav a:hover {
+            color: #69f0a3;
+            text-decoration: underline;
+            text-shadow: 0 0 8px rgba(105, 240, 163, 0.5);
+        }
+        main {
+            padding: 20px;
+        }
+        section {
+            background: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 100, 45, 0.10);
+            border-top: 3px solid #00a651;
+        }
+        h2 {
+            margin-top: 0;
+            color: #008640;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input, select, textarea, button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #b9d8c3;
+        }
+        button {
+            background: linear-gradient(120deg, #008640, #00a651);
+            color: #fff;
+            border: none;
+            margin-top: 15px;
+            cursor: pointer;
+            box-shadow: 0 3px 12px rgba(0, 166, 81, 0.20);
+        }
+        button:hover {
+            background: linear-gradient(120deg, #006b32, #008640);
+            box-shadow: 0 0 14px rgba(0, 166, 81, 0.35);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        table th, table td {
+            border: 1px solid #c8dfcf;
+            padding: 8px;
+            text-align: left;
+        }
+        table th {
+            background: linear-gradient(90deg, #d9f3e2, #effaf2);
+            color: #07552d;
+        }
+        footer {
+            background: linear-gradient(100deg, #101510, #17251b, #008640);
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            font-size: 13px;
+        }
+.error { color: #c62828; font-weight: bold; }
+.success { color: #008640; font-weight: bold; }
+.warning { color: #b77900; font-weight: bold; }
+    </style>
+
+
+
+</head>
+
+<body>
+
+<div class="header">
+    
+    <img class="logo" src="https://www.iebc.or.ke/images/iebclogo1.png">
+</div>
+
+<!-- INPUT SECTION -->
+<div class="card">
+<h3>Polling Station Entry</h3>
+
+County: <input id="county" placeholder="e.g Nairobi"><br>
+
+Registered: <input type="number" id="registered">
+Cast: <input type="number" id="cast">
+Valid: <input type="number" id="valid">
+Rejected: <input type="number" id="rejected">
+
+<button onclick="addStation()">Add Station</button>
+<p id="status"></p>
+</div>
+
+<!-- DASHBOARD -->
+<div class="card">
+<h3>📊 Dashboard (Votes by County)</h3>
+<canvas id="chart"></canvas>
+</div>
+
+<!-- IMAGE OCR -->
+<div class="card">
+<h3>📷 Upload Form (OCR Prototype)</h3>
+<input type="file" onchange="previewImage(event)">
+<br><br>
+<img id="preview" width="200">
+<p>⚠️ OCR simulation: integrate Tesseract.js for real extraction</p>
+</div>
+
+<script>
+let stations = [];
+
+// ADD STATION + FRAUD CHECK
+function addStation() {
+    let county = document.getElementById("county").value;
+    let registered = +document.getElementById("registered").value;
+    let cast = +document.getElementById("cast").value;
+    let valid = +document.getElementById("valid").value;
+    let rejected = +document.getElementById("rejected").value;
+
+    let turnout = (cast / registered) * 100;
+
+    let messages = [];
+
+    // Basic validation
+    if (valid + rejected !== cast) {
+        messages.push("❌ Invalid totals");
+    }
+
+    // Anti-fraud checks
+    if (turnout > 95) {
+        messages.push("⚠️ Suspicious turnout (" + turnout.toFixed(1) + "%)");
+    }
+
+    if (cast > registered) {
+        messages.push("🚨 Over-voting detected");
+    }
+
+    if (valid === 0 && cast > 0) {
+        messages.push("⚠️ All votes rejected? suspicious");
+    }
+
+    stations.push({ county, valid });
+
+    updateChart();
+
+    let status = document.getElementById("status");
+
+    if (messages.length > 0) {
+        status.innerHTML = messages.join("<br>");
+        status.className = "warning";
+    } else {
+        status.innerHTML = "✅ Station recorded successfully";
+        status.className = "success";
+    }
+}
+
+// CHART.JS DASHBOARD
+let chart;
+
+function updateChart() {
+    let countyTotals = {};
+
+    stations.forEach(s => {
+        if (!countyTotals[s.county]) {
+            countyTotals[s.county] = 0;
+        }
+        countyTotals[s.county] += s.valid;
+    });
+
+    let labels = Object.keys(countyTotals);
+    let data = Object.values(countyTotals);
+
+    if (chart) chart.destroy();
+
+    chart = new Chart(document.getElementById("chart"), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Valid Votes',
+                data: data
+            }]
+        }
+    });
+}
+
+// IMAGE PREVIEW (OCR PLACEHOLDER)
+function previewImage(event) {
+    let reader = new FileReader();
+    reader.onload = function(){
+        document.getElementById("preview").src = reader.result;
+    }
+    reader.readAsDataURL(event.target.files[0]);
+}
+</script>
+
+
+</body></html>
